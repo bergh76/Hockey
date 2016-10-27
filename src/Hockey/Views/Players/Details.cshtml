@@ -1,0 +1,102 @@
+@model Hockey.Models.Players
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Players</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ISActive)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ISActive)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ISSigned)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ISSigned)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerAddDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerAddDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerCardId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerCardId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerFirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerFirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerImage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerImage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerJersyNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerJersyNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerLastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerLastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model._ConferencesId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model._ConferencesId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model._DivisionsId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model._DivisionsId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model._ImagesId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model._ImagesId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model._MakersId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model._MakersId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model._SeasonsId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model._SeasonsId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model._TeamsId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model._TeamsId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

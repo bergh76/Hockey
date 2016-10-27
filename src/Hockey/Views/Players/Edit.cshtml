@@ -1,0 +1,145 @@
+@model Hockey.Models.Players
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>Players</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="ISActive" />
+                    <label asp-for="ISActive"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="ISSigned" />
+                    <label asp-for="ISSigned"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerAddDate" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerAddDate" class="form-control" />
+                <span asp-validation-for="PlayerAddDate" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerCardId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerCardId" class="form-control" />
+                <span asp-validation-for="PlayerCardId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerFirstName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerFirstName" class="form-control" />
+                <span asp-validation-for="PlayerFirstName" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerImage" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerImage" class="form-control" />
+                <span asp-validation-for="PlayerImage" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerJersyNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerJersyNumber" class="form-control" />
+                <span asp-validation-for="PlayerJersyNumber" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerLastName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerLastName" class="form-control" />
+                <span asp-validation-for="PlayerLastName" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PositionId" class="col-md-2 control-label">Position</label>
+            <div class="col-md-10">
+                <select asp-for="PositionId" class="form-control placeholder" asp-items="ViewBag.Position"></select>
+                <span asp-validation-for="PositionId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ConferencesId" class="col-md-2 control-label">Conference</label>
+            <div class="col-md-10">
+                <select asp-for="ConferencesId" class="form-control placeholder" asp-items="ViewBag.Conference"></select>
+                <span asp-validation-for="ConferencesId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DivisionsId" class="col-md-2 control-label">Division</label>
+            <div class="col-md-10">
+                <select asp-for="DivisionsId" class="form-control placeholder" asp-items="ViewBag.Division"></select>
+                <span asp-validation-for="DivisionsId" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MakersId" class="col-md-2 control-label">Card Maker</label>
+            <div class="col-md-10">
+                <select asp-for="MakersId" class="form-control placeholder" asp-items="ViewBag.Maker"></select>
+                <span asp-validation-for="MakersId" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Season</label>
+            <div class="col-md-6">
+                <div class="col-xs-3">
+                    <select name="start" class="form-control"></select>
+                    @*<span asp-validation-for="start" class="text-danger" />*@
+                </div>
+                <div class="col-xs-3">
+                    <select name="end" class="form-control"></select>
+                    @*<span asp-validation-for="SeasonsId" class="text-danger" />*@
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="TeamsId" class="col-md-2 control-label">Team</label>
+            <div class="col-md-10">
+                <select asp-for="TeamsId" class="form-control placeholder" asp-items="ViewBag.Team"></select>
+                <span asp-validation-for="TeamsId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Value" class="col-md-2 control-label">Value</label>
+            <div class="col-md-1">
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

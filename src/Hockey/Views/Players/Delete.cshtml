@@ -1,0 +1,94 @@
+@model Hockey.Models.Players
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Players</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ISActive)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ISActive)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ISSigned)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ISSigned)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerAddDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerAddDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerCardId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerCardId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerFirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerFirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerImage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerImage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerJersyNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerJersyNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerLastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerLastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ConferencesId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConferencesId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DivisionsId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DivisionsId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MakersId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MakersId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamsId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TeamsId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,295 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Hockey.Data;
+using Hockey.Models;
+using Microsoft.AspNetCore.Authorization;
+using Hockey.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading;
+using System.Text.RegularExpressions;
+
+
+namespace Hockey.Areas.Admin.Controllers
+{
+
+    public class PlayersController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _hostEnvironment; // service that provides some useful environment information such as the current file path
+        //private IFormFile _file;
+        private static string _root;
+        public static string _imageData;
+        public static string _fileExtension;
+        public static Match _imageMatch;
+        public static string _mimeType;
+
+
+        public PlayersController(ApplicationDbContext context, IHostingEnvironment hostEnvironment)
+        {
+            _context = context;
+            _hostEnvironment = hostEnvironment;
+            //_file = file;
+
+        }
+
+        // GET: Players
+        [AllowAnonymous]
+        public async Task<IActionResult> Index()
+        {
+            try
+            {
+                var playerList = from p in _context.Player
+                                 join c in _context.Conference on p.ConferenceId equals c.ConferenceId
+                                 join d in _context.Division on p.DivisionId equals d.DivisionId
+                                 join t in _context.NhlTeam on p.NhlTeamId equals t.NhlTeamId
+                                 join y in _context.Position on p.PositionId equals y.PositionId
+                                 join i in _context.Image on p.ImageId equals i.ImageId
+                                 join n in _context.Nationality on p.NationalityId equals n.NationalityId
+                                 join ti in _context.TeamImage on p.TeamImageId equals ti.TeamImageId
+                                 join s in _context.Season on p.SeasonId equals s.SeasonId
+                                 join m in _context.CardManufacture on p.CardManufactureId equals m.CardManufactureId
+                                 select new PlayerViewModel
+                                 {
+                                     CardNumber = p.PlayerCardId,
+                                     NationalityImgPath = n.NationalityImageName + n.NationalityImagePath,
+                                     Nationality = n.NationalityName,
+                                     FirstName = p.PlayerFirstName,
+                                     LastName = p.PlayerLastName,
+                                     Position = y.PositionType,
+                                     JersyNumber = p.PlayerJersyNumber,
+                                     Conference = c.ConferenceName,
+                                     Division = d.DivisionName,
+                                     TeamImgPath = ti.TeamImageName + ti.TeamImagePath,
+                                     Team = t.NhlTeamName,
+                                     CardManufacture = m.MakerName,
+                                     Season = s.SeasonName,
+                                     ImagePath = i.ImageName + i.ImagePath,
+                                     ISSigned = p.ISSigned,
+                                     PlayerId = p.PlayerId
+                                 };
+                IEnumerable<PlayerViewModel> pwModel = await playerList.ToListAsync();
+                return View(pwModel);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException(ex.Message);
+            }
+                //return View();
+
+           
+        }
+
+        // GET: Players/Details/5
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var players = await _context.Player.SingleOrDefaultAsync(m => m.PlayerId == id);
+            if (players == null)
+            {
+                return NotFound();
+            }
+
+            return View(players);
+        }
+
+
+        // GET: Players/Create
+        public IActionResult Create()
+        {
+            if (ModelState.IsValid)
+            {
+                ViewData["CardManufacture"] = new SelectList(_context.CardManufacture.OrderBy(x => x.MakerName), "CardManufactureId", "MakerName");
+                ViewData["NhlTeam"] = new SelectList(_context.NhlTeam.OrderBy(x => x.NhlTeamName), "NhlTeamId", "NhlTeamName");
+                ViewData["Division"] = new SelectList(_context.Division.OrderBy(x => x.DivisionName), "DivisionId", "DivisionName");
+                ViewData["Conference"] = new SelectList(_context.Conference.OrderBy(x => x.ConferenceName), "ConferenceId", "ConferenceName");
+                ViewData["Season"] = new SelectList(_context.Season.OrderByDescending(x => x.SeasonName), "SeasonId", "SeasonName");
+                ViewData["Position"] = new SelectList(_context.Position.OrderBy(x => x.PositionId), "PositionId", "PositionType");
+                ViewData["Nationality"] = new SelectList(_context.Nationality.OrderBy(x => x.NationalityId), "NationalityId", "NationalityName");
+            }
+            return View();
+        }
+
+        // POST: Players/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize]
+        public async Task<IActionResult> Create([Bind("PlayerCardId, PositionId,PlayerFirstName,PlayerLastName,PlayerJersyNumber, PlayerImage,ISActive,ISSigned,Value,ConferenceId,DivisionId,SeasonId,NhlTeamId,ImageId,CardManufactureId,PlayerAddDate,TeamImageId,NationalityId")] Player players)
+        {
+           _root =  _hostEnvironment.WebRootPath;
+            if (ModelState.IsValid)
+            {
+                _context.Add(players);
+                //create filename
+                Guid guid = new Guid();
+                var fileName = string.Format("{0}_{1}_{2}", players.PlayerFirstName, players.PlayerLastName, guid) + _fileExtension;
+
+                string team = await _context.NhlTeam.Where(x => x.NhlTeamId == players.NhlTeamId).Select(x => x.NhlTeamName).FirstOrDefaultAsync();
+                string year = await _context.Season.Where(x => x.SeasonId == players.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
+                string position = await _context.Position.Where(x => x.PositionId == players.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
+                string imgPath = string.Format("/images/nhl/{0}/{1}/{2}/{3}_{4}", team, year, position, players.PlayerFirstName,players.PlayerLastName);
+                var uploads = _root + "/" + imgPath;
+                Directory.CreateDirectory(uploads);
+
+                _context.SaveChanges();
+                NewImage(players, fileName, imgPath);
+               
+                //players.PlayerId = await _context.Image.Select(x => x.PlayerId).LastOrDefaultAsync();
+                players.ImageId = await _context.Image.Select(x => x.ImageId).LastOrDefaultAsync();
+                await _context.SaveChangesAsync();
+                return View();
+            }
+            return View(players);
+        }
+
+        public Image NewImage(Player player, string fileName, string imgPath)
+        {
+            var img = new Image
+            {
+                ImageName = fileName,
+                ImagePath = imgPath,
+                PlayerId = player.PlayerId
+            };
+            _context.Add(img);
+            _context.SaveChanges();
+            return img;
+        }
+
+        [HttpPost]
+        public string ImageData(string imageData)
+        {
+            if (string.IsNullOrEmpty(imageData))
+                throw new ArgumentNullException(nameof(imageData), "No image data received");
+
+            Match imageMatch = Regex.Match(imageData, @"^data:(?<mimetype>[^;]+);base64,(?<data>.+)$");
+            if (!imageMatch.Success)
+                throw new ArgumentException("imageData is in unknown format", nameof(imageData));
+
+            string mimeType = imageMatch.Groups["mimetype"].Value;
+            Match imageType = Regex.Match(mimeType, @"^[^/]+/(?<type>.+?)$");
+            if (!imageType.Success)
+                throw new ArgumentException($"mimeType format invalid for {mimeType}", nameof(mimeType));
+
+            string fileExtension = imageType.Groups["type"].Value;
+            byte[] data = Convert.FromBase64String(imageMatch.Groups["data"].Value);
+            var bytes = data;
+            // TODO: Fix a Image Bulder to create an Imager .png/.jpg or other format from Base64StringFormat
+            // using (var imageFile = new FileStream(_imageData, FileMode.Create))
+            //{
+            //    imageFile.Write(bytes, 0, bytes.Length);
+            //    imageFile.Flush();
+            //}
+
+            _imageData = imageData;
+            _fileExtension = fileExtension;
+            _imageMatch = imageMatch;
+            _mimeType = mimeType;
+
+            return imageData;
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var players = await _context.Player.SingleOrDefaultAsync(m => m.PlayerId == id);
+            if (players == null)
+            {
+                return NotFound();
+            }
+            return View(players);
+        }
+
+       
+
+        // POST: Players/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("PlayerCardId, PositionId,PlayerFirstName,PlayerLastName,PlayerJersyNumber, PlayerImage,ISActive,ISSigned,Value,ConferenceId,DivisionId,SeasonId,NhlTeamId,ImageId,CardManufactureId,PlayerAddDate,TeamImageId,NationalityId")] Player players)
+        {
+            ViewData["Maker"] = new SelectList(_context.CardManufacture.OrderBy(x => x.MakerName), "Id", "MakerName");
+            ViewData["Team"] = new SelectList(_context.NhlTeam.OrderBy(x => x.NhlTeamName), "Id", "TeamName");
+            ViewData["Division"] = new SelectList(_context.Division.OrderBy(x => x.DivisionName), "Id", "DivisionName");
+            ViewData["Conference"] = new SelectList(_context.Conference.OrderBy(x => x.ConferenceName), "Id", "ConferenceName");
+            ViewData["Position"] = new SelectList(_context.Position.OrderBy(x => x.PositionType), "Id", "Position");
+
+            if (id != players.PlayerId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(players);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PlayersExists(players.PlayerId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View(players);
+        }
+
+        // GET: Players/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var players = await _context.Player.SingleOrDefaultAsync(m => m.PlayerId == id);
+            if (players == null)
+            {
+                return NotFound();
+            }
+
+            return View(players);
+        }
+
+        // POST: Players/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var players = await _context.Player.SingleOrDefaultAsync(m => m.PlayerId == id);
+            _context.Player.Remove(players);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        private bool PlayersExists(int id)
+        {
+            return _context.Player.Any(e => e.PlayerId == id);
+        }
+    }
+}

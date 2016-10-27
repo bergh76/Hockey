@@ -1,0 +1,604 @@
+﻿@model Hockey.Models.Player
+
+@{
+    ViewData["Title"] = "Create";
+}
+<!-- Jumbotron -->
+<section class="jumbotron docs-jumbotron">
+    <div class="container">
+        <div class="row">
+            <span class="img-logo-container"><img class="img img-responsive" src="~/images/Logos/00_Nhl_shield_sm.png" /></span><h2>NHL - Players</h2>
+            <p class="lead">- Add Playercard data and add image -</p>
+        </div>
+    </div>
+</section>
+<section class="container">
+   
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <div class="form-horizontal">
+                    <h4>Players</h4>
+                    <hr />
+                    @using (Html.BeginForm("Create", "Players", FormMethod.Post))
+                    {
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                <input asp-for="ISActive" />
+                                <label asp-for="ISActive"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                <input asp-for="ISSigned" />
+                                <label asp-for="ISSigned"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PlayerCardId" class="col-md-5 control-label">Card Number</label>
+                        <div class="col-md-7">
+                            <input asp-for="PlayerCardId" class="form-control" />
+                            <span asp-validation-for="PlayerCardId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PlayerFirstName" class="col-md-5 control-label">First Name</label>
+                        <div class="col-md-7">
+                            <input asp-for="PlayerFirstName" class="form-control" />
+                            <span asp-validation-for="PlayerFirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PlayerLastName" class="col-md-5 control-label">Last Name</label>
+                        <div class="col-md-7">
+                            <input asp-for="PlayerLastName" class="form-control" />
+                            <span asp-validation-for="PlayerLastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PlayerJersyNumber" class="col-md-5 control-label">Jersey Number</label>
+                        <div class="col-md-7">
+                            <input asp-for="PlayerJersyNumber" class="form-control" />
+                            <span asp-validation-for="PlayerJersyNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="NationalityId" class="col-md-5 control-label">Nationality</label>
+                        <div class="col-md-7">
+                            <select asp-for="NationalityId" class="form-control placeholder" asp-items="ViewBag.Nationality"></select>
+                            <span asp-validation-for="NationalityId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PositionId" class="col-md-5 control-label">Position</label>
+                        <div class="col-md-7">
+                            <select asp-for="PositionId" class="form-control placeholder" asp-items="ViewBag.Position"></select>
+                            <span asp-validation-for="PositionId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="SeasonId" class="col-md-5 control-label">Season</label>
+                        <div class="col-md-7">
+                            <div class="col-xs-12">
+                                <select asp-for="SeasonId" class="form-control placeholder" asp-items="ViewBag.Season"></select>
+                                <span asp-validation-for="SeasonId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConferenceId" class="col-md-5 control-label">Conference</label>
+                        <div class="col-md-7">
+                            <select asp-for="ConferenceId" class="form-control placeholder" asp-items="ViewBag.Conference"></select>
+                            <span asp-validation-for="ConferenceId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DivisionId" class="col-md-5 control-label">Division</label>
+                        <div class="col-md-7">
+                            <select asp-for="DivisionId" class="form-control placeholder" asp-items="ViewBag.Division"></select>
+                            <span asp-validation-for="DivisionId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="NhlTeamId" class="col-md-5 control-label">Team</label>
+                        <div class="col-md-7">
+                            <select asp-for="NhlTeamId" class="form-control placeholder" asp-items="ViewBag.NhlTeam"></select>
+                            <span asp-validation-for="NhlTeamId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CardManufactureId" class="col-md-5 control-label">Card Maker</label>
+                        <div class="col-md-7">
+                            <select asp-for="CardManufactureId" class="form-control placeholder" asp-items="ViewBag.CardManufacture"></select>
+                            <span asp-validation-for="CardManufactureId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Value" class="col-md-5 control-label">Value</label>
+                        <div class="col-md-7">
+                            <input asp-for="Value" class="form-control" />
+                            <span asp-validation-for="Value" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- ADD PLAYER BUTTON -->
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <input id="downloadButton" type="submit" value="Create" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </div> <!--/.BUTTON END -->
+                    }
+                </div>
+            </div>
+
+    <!--IMAGE UPLOADER START-->
+    <div class="col-md-8">
+        @*@Html.Partial("_ImageUpload")*@
+
+        <div class="cropper">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Load Image</h4>
+                    <hr />
+                    <div class="col-md-12">
+                        <!-- <h3 class="page-header">Demo:</h3> -->
+                        <div class="img img-container">
+                            <img id="image" src="" alt="Picture" />
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <div class="col-md-12 btn-marg-bottom">
+                            <button type="button" class="btn btn-primary" data-method="reset" title="Reset">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Reset $().cropper(&quot;reset&quot;)">
+                                    <span class="fa fa-refresh"></span>
+                                </span>
+                            </button>
+                            <label class="btn btn-success btn-upload" for="inputImage" title="Upload image file">
+                                <input type="file" class="sr-only" id="inputImage" name="file" accept="image/*">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Import image with Blob URLs">
+                                    <span class="fa fa-upload"></span>
+                                </span>
+                            </label>
+
+                            <button type="button" class="btn btn-primary" data-method="disable" title="Disable">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Disable $().cropper(&quot;disable&quot;)">
+                                    <span class="fa fa-lock"></span>
+                                </span>
+                            </button>
+                            <button type="button" class="btn btn-primary" data-method="enable" title="Enable">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Enable $().cropper(&quot;enable&quot;)">
+                                    <span class="fa fa-unlock"></span>
+                                </span>
+                            </button>
+
+                            <button type="button" class="btn btn-primary" data-method="crop" title="Crop">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Crop $().cropper(&quot;crop&quot;)">
+                                    <span class="fa fa-check"></span>
+                                </span>
+                            </button>
+                            <button type="button" class="btn btn-primary" data-method="clear" title="Clear">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Clear $().cropper(&quot;clear&quot;)">
+                                    <span class="fa fa-remove"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12 docs-buttons">
+                    <!-- Aspect Ratio Buttons
+                    <div class="btn-group">
+                        <div class="col-md-12">
+                            <div class="btn-group docs-aspect-ratios" data-toggle="buttons">
+                                <label class="btn btn-sm btn-primary active">
+                                    <input type="radio" class="sr-only" id="aspectRatio0" name="aspectRatio" value="1.7777777777777777">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 16 / 9">
+                                        16:9
+                                    </span>
+                                </label>
+                                <label class="btn btn-sm btn-primary">
+                                    <input type="radio" class="sr-only" id="aspectRatio1" name="aspectRatio" value="1.3333333333333333">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 4 / 3">
+                                        4:3
+                                    </span>
+                                </label>
+                                <label class="btn btn-sm btn-primary">
+                                    <input type="radio" class="sr-only" id="aspectRatio2" name="aspectRatio" value="1">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 1 / 1">
+                                        1:1
+                                    </span>
+                                </label>
+                                <label class="btn btn-sm btn-primary">
+                                    <input type="radio" class="sr-only" id="aspectRatio3" name="aspectRatio" value="0.6666666666666666">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 2 / 3">
+                                        2:3
+                                    </span>
+                                </label>
+                                <label class="btn btn-sm btn-primary">
+                                    <input type="radio" class="sr-only" id="aspectRatio4" name="aspectRatio" value="NaN">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: NaN">
+                                        Free
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                        /.Aspect Ratio Buttons -->
+                    <!-- Cropper Download Buttons -->
+
+                    <div class="btn-group btn-group-crop">
+                        <div class="docs-preview clearfix">
+                            <div class="col-md-9">
+                                <div class="img-preview preview-lg img-responsive"></div>
+                                @using (Html.BeginForm("Create", "Players", FormMethod.Post))
+                                {
+                                    <button id="downloadButton" type="button" class="btn btn-success btn-marg-bottom">
+                                        @*data-method="getCroppedCanvas" data-option="{ &quot;width&quot;: 420, &quot;height&quot;: 607.5 }">*@
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Download">
+                                            <i class="fa fa-user-plus"></i> Add Player
+                                        </span>
+                                    </button>
+                                }
+                            </div>
+                            <!--
+                            <div class="col-md-6">
+                                <div class="img-preview preview-md img-responsive"></div>
+                                <button type="button" class="btn btn-sm btn-success btn-marg-bottom" data-method="getCroppedCanvas" data-option="{ &quot;width&quot;: 320, &quot;height&quot;: 464 }">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Download">
+                                        <i class="fa fa-download"></i> 320×464
+                                    </span>
+                                </button>
+                            </div>
+
+
+                            <div class="col-md-5">
+                                <div class="img-preview preview-sm img-responsive"></div>
+                                <button type="button" class="btn btn-sm btn-success btn-marg-bottom" data-method="getCroppedCanvas" data-option="{ &quot;width&quot;: 250, &quot;height&quot;: 405 }">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Download">
+                                        <i class="fa fa-download"></i> 250×363
+                                    </span>
+                                </button>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="img-preview preview-xs img-responsive"></div>
+                                <button type="button" class="btn btn-sm btn-success btn-marg-bottom" data-method="getCroppedCanvas" data-option="{ &quot;width&quot;: 180, &quot;height&quot;: 320 }">
+                                    <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="Download)">
+                                        <i class="fa fa-download"></i> 180×261
+                                    </span>
+                                </button>
+                            </div>-->
+                        </div>
+                    </div>
+                </div><!-- /.Cropper Download Buttons -->
+
+            </div><!-- /.docs-buttons -->
+            <!--
+                <div class="col-md-6">
+                     <h3 class="page-header">Preview:</h3>
+                    <div class="docs-preview clearfix">
+                            <div class="img-preview preview-lg" style="">
+                                <img src="" style="display: block; width: 280px; height: 405px; min-width: 0px !important; min-height: 0px !important; max-width: none !important; max-height: none !important; transform: none;">
+                            </div>
+                        </div>
+
+                </div>
+              -->
+            <!--************************************************************************************-->
+            <!--************************************************************************************-->
+            <!-- Show the cropped image in modal -->
+            <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="getCroppedCanvasTitle">Cropped</h4>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            @{ var date = DateTime.Now;
+                                string filename = date + ".png"; }
+                            <a class="btn btn-primary" id="download" href="javascript:void(0);" download="@filename">Download</a>
+                            <label id="download" href="javascript:void(0);" download="cropped.png"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    </div>
+
+    @*</div>*@
+    @*</form>*@
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</section>
+
+
+
+<!--SCRIPT IMAGECROPPER-->
+<script>
+            $(document).ready(function () {
+                var $image = $('#image');
+                var $download = $('#download');
+                var $dataX = $('#dataX');
+                var $dataY = $('#dataY');
+                var $dataHeight = $('#dataHeight');
+                var $dataWidth = $('#dataWidth');
+                var $dataRotate = $('#dataRotate');
+                var $dataScaleX = $('#dataScaleX');
+                var $dataScaleY = $('#dataScaleY');
+                var options = {
+                    aspectRatio: 0 / 0,
+                    preview: '.img-preview',
+                    crop: function (e) {
+                        $dataX.val(Math.round(e.x));
+                        $dataY.val(Math.round(e.y));
+                        $dataHeight.val(Math.round(e.height));
+                        $dataWidth.val(Math.round(e.width));
+                        $dataRotate.val(e.rotate);
+                        $dataScaleX.val(e.scaleX);
+                        $dataScaleY.val(e.scaleY);
+                    }
+                };
+
+
+                // Tooltip
+                $('[data-toggle="tooltip"]').tooltip();
+
+
+                // Cropper
+                $image.on({
+                    'build.cropper': function (e) {
+                        console.log(e.type);
+                    },
+                    'built.cropper': function (e) {
+                        console.log(e.type);
+                    },
+                    'cropstart.cropper': function (e) {
+                        console.log(e.type, e.action);
+                    },
+                    'cropmove.cropper': function (e) {
+                        console.log(e.type, e.action);
+                    },
+                    'cropend.cropper': function (e) {
+                        console.log(e.type, e.action);
+                        //$(".cropper-crop-box .cropper-point").mouseup(function () {
+                            var input = inputImage
+                        console.log("Button action goes here:\n{0}", input)
+                        var output = download
+                        console.log("Button action fileType goes here:{0}", output)
+                        var canvasSize = ($dataHeight, $dataWidth)
+                        console.log("CanvasSize goes here:\n{0}", canvasSize)
+                        var imageData = $("#image").cropper("getCroppedCanvas", canvasSize).toDataURL();
+                        console.log("Image Data goes here:\n{0}", imageData)
+                        $.ajax({
+                            url: '/Players/ImageData/',
+                            type: 'POST',
+                            data: { 'imageData': imageData },
+                            dataType: 'json',
+                            timeout: 300000
+                        });
+                    //});
+                    },
+                    'crop.cropper': function (e) {
+                        console.log(e.type, e.x, e.y, e.width, e.height, e.rotate, e.scaleX, e.scaleY);
+                    },
+                    'zoom.cropper': function (e) {
+                        console.log(e.type, e.ratio);
+                    }
+                }).cropper(options);
+
+
+                // Buttons
+                if (!$.isFunction(document.createElement('canvas').getContext)) {
+                    $('button[data-method="getCroppedCanvas"]').prop('disabled', true);
+                }
+
+                if (typeof document.createElement('cropper').style.transition === 'undefined') {
+                    $('button[data-method="rotate"]').prop('disabled', true);
+                    $('button[data-method="scale"]').prop('disabled', true);
+                }
+
+
+                // Download
+                if (typeof $download[0].download === 'undefined') {
+                    $download.addClass('disabled');
+                }
+
+
+                // Options
+                $('.docs-toggles').on('change', 'input', function () {
+                    var $this = $(this);
+                    var name = $this.attr('name');
+                    var type = $this.prop('type');
+                    var cropBoxData;
+                    var canvasData;
+
+                    if (!$image.data('cropper')) {
+                        return;
+                    }
+
+                    if (type === 'checkbox') {
+                        options[name] = $this.prop('checked');
+                        cropBoxData = $image.cropper('getCropBoxData');
+                        canvasData = $image.cropper('getCanvasData');
+
+                        options.built = function () {
+                            $image.cropper('setCropBoxData', cropBoxData);
+                            $image.cropper('setCanvasData', canvasData);
+                        };
+                    } else if (type === 'radio') {
+                        options[name] = $this.val();
+                    }
+
+                    $image.cropper('destroy').cropper(options);
+                });
+
+
+                // Methods
+                $('.docs-buttons').on('click', '[data-method]', function () {
+                    var $this = $(this);
+                    var data = $this.data();
+                    var $target;
+                    var result;
+
+                    if ($this.prop('disabled') || $this.hasClass('disabled')) {
+                        return;
+                    }
+
+                    if ($image.data('cropper') && data.method) {
+                        data = $.extend({}, data); // Clone a new one
+
+                        if (typeof data.target !== 'undefined') {
+                            $target = $(data.target);
+
+                            if (typeof data.option === 'undefined') {
+                                try {
+                                    data.option = JSON.parse($target.val());
+                                } catch (e) {
+                                    console.log(e.message);
+                                }
+                            }
+                        }
+
+                        result = $image.cropper(data.method, data.option, data.secondOption);
+
+                        switch (data.method) {
+                            case 'scaleX':
+                            case 'scaleY':
+                                $(this).data('option', -data.option);
+                                break;
+
+                            case 'getCroppedCanvas':
+                                if (result) {
+
+                                    // Bootstrap's Modal
+                                    $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+
+                                    if (!$download.hasClass('disabled')) {
+                                        $download.attr('href', result.toDataURL());
+                                    }
+                                }
+
+                                break;
+                        }
+
+                        if ($.isPlainObject(result) && $target) {
+                            try {
+                                $target.val(JSON.stringify(result));
+                            } catch (e) {
+                                console.log(e.message);
+                            }
+                        }
+
+
+                    }
+                });
+
+                // Keyboard
+                $(document.body).on('keydown', function (e) {
+                    if (!$image.data('cropper') || this.scrollTop > 300) {
+                        return;
+                    }
+
+                    switch (e.which) {
+                        case 37:
+                            e.preventDefault();
+                            $image.cropper('move', -1, 0);
+                            break;
+
+                        case 38:
+                            e.preventDefault();
+                            $image.cropper('move', 0, -1);
+                            break;
+
+                        case 39:
+                            e.preventDefault();
+                            $image.cropper('move', 1, 0);
+                            break;
+
+                        case 40:
+                            e.preventDefault();
+                            $image.cropper('move', 0, 1);
+                            break;
+                    }
+                });
+
+                // Import image
+                var $inputImage = $('#inputImage');
+                var URL = window.URL || window.webkitURL;
+                var blobURL;
+
+                if (URL) {
+                    $inputImage.change(function () {
+                        var files = this.files;
+                        var file;
+
+                        if (!$image.data('cropper')) {
+                            return;
+                        }
+
+                        if (files && files.length) {
+                            file = files[0];
+
+                            if (/^image\/\w+$/.test(file.type)) {
+                                blobURL = URL.createObjectURL(file);
+                                $image.one('built.cropper', function () {
+
+                                    // Revoke when load complete
+                                    URL.revokeObjectURL(blobURL);
+                                }).cropper('reset').cropper('replace', blobURL);
+                                $inputImage.val('');
+                            } else {
+                                window.alert('Please choose an image file.');
+                            }
+                        }
+                    });
+                } else {
+                    $inputImage.prop('disabled', true).parent().addClass('disabled');
+                }
+
+                //$('crop.cropper').click(function () {
+                //    var input = inputImage
+                //    console.log("Button action goes here:\n{0}", input)
+                //    var output = download
+                //    console.log("Button action fileType goes here:{0}", output)
+                //    var canvasSize = ($dataHeight, $dataWidth)
+                //    console.log("CanvasSize goes here:\n{0}", canvasSize)
+                //    var imageData = $("#image").cropper("getCroppedCanvas", canvasSize).toDataURL();
+                //    console.log("Image Data goes here:\n{0}", imageData)
+                //    $.ajax({
+                //        url: '/Players/ImageData/',
+                //        type: 'POST',
+                //        data: { 'imageData': imageData },
+                //        dataType: 'json',
+                //        timeout: 300000
+                //    });
+                //});
+            });
+</script>
+<!-- /.IMAGE UPLOADER-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
