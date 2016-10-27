@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace Hockey.Models
 {
-    public class Player
+    public class NhlPlayer
     {
-        public int PlayerId { get; set; }
-        public string PlayerCardId { get; set; }
+        public int NhlPlayerId { get; set; }
+        public string NhlPlayerCardId { get; set; }
         public Position _Position { get; set; }
         public int PositionId { get; set; }
         public string PlayerFirstName { get; set; }
@@ -21,7 +21,7 @@ namespace Hockey.Models
         public League _Leauge { get; set; }
         public int LeagueId { get; set; }
         public Conference _Conference { get; set; }
-        public int ConferenceId {get;set;}
+        public int ConferenceId { get; set; }
         public Division _Division { get; set; }
         public int DivisionId { get; set; }
         public Season _Season { get; set; }

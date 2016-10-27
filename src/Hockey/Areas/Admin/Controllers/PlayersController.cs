@@ -29,7 +29,7 @@ namespace Hockey.Areas.Admin.Controllers
         public static string _fileExtension;
         public static Match _imageMatch;
         public static string _mimeType;
-
+        public static System.Drawing.Image _imageFile;
 
         public PlayersController(ApplicationDbContext context, IHostingEnvironment hostEnvironment)
         {
@@ -48,14 +48,15 @@ namespace Hockey.Areas.Admin.Controllers
                 var playerList = from p in _context.Player
                                  join c in _context.Conference on p.ConferenceId equals c.ConferenceId
                                  join d in _context.Division on p.DivisionId equals d.DivisionId
-                                 join t in _context.NhlTeam on p.NhlTeamId equals t.NhlTeamId
+                                 join t in _context.Team on p.TeamId equals t.TeamId
                                  join y in _context.Position on p.PositionId equals y.PositionId
                                  join i in _context.Image on p.ImageId equals i.ImageId
                                  join n in _context.Nationality on p.NationalityId equals n.NationalityId
                                  join ti in _context.TeamImage on p.TeamImageId equals ti.TeamImageId
                                  join s in _context.Season on p.SeasonId equals s.SeasonId
                                  join m in _context.CardManufacture on p.CardManufactureId equals m.CardManufactureId
-                                 select new PlayerViewModel
+                                 join l in _context.League on p.LeagueId equals l.LeagueId
+                                 select new NhlPlayerViewModel
                                  {
                                      CardNumber = p.PlayerCardId,
                                      NationalityImgPath = n.NationalityImageName + n.NationalityImagePath,
@@ -64,17 +65,18 @@ namespace Hockey.Areas.Admin.Controllers
                                      LastName = p.PlayerLastName,
                                      Position = y.PositionType,
                                      JersyNumber = p.PlayerJersyNumber,
+                                     League = l.LeagueName,
                                      Conference = c.ConferenceName,
                                      Division = d.DivisionName,
                                      TeamImgPath = ti.TeamImageName + ti.TeamImagePath,
-                                     Team = t.NhlTeamName,
+                                     Team = t.TeamName,
                                      CardManufacture = m.MakerName,
                                      Season = s.SeasonName,
                                      ImagePath = i.ImageName + i.ImagePath,
                                      ISSigned = p.ISSigned,
                                      PlayerId = p.PlayerId
                                  };
-                IEnumerable<PlayerViewModel> pwModel = await playerList.ToListAsync();
+                IEnumerable<NhlPlayerViewModel> pwModel = await playerList.ToListAsync();
                 return View(pwModel);
             }
             catch (Exception ex)
@@ -111,7 +113,8 @@ namespace Hockey.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 ViewData["CardManufacture"] = new SelectList(_context.CardManufacture.OrderBy(x => x.MakerName), "CardManufactureId", "MakerName");
-                ViewData["NhlTeam"] = new SelectList(_context.NhlTeam.OrderBy(x => x.NhlTeamName), "NhlTeamId", "NhlTeamName");
+                ViewData["League"] = new SelectList(_context.League.OrderBy(x => x.LeagueName), "LeagueId", "LeaugeName");
+                ViewData["Team"] = new SelectList(_context.Team.OrderBy(x => x.TeamName), "TeamId", "TeamName");
                 ViewData["Division"] = new SelectList(_context.Division.OrderBy(x => x.DivisionName), "DivisionId", "DivisionName");
                 ViewData["Conference"] = new SelectList(_context.Conference.OrderBy(x => x.ConferenceName), "ConferenceId", "ConferenceName");
                 ViewData["Season"] = new SelectList(_context.Season.OrderByDescending(x => x.SeasonName), "SeasonId", "SeasonName");
@@ -127,27 +130,22 @@ namespace Hockey.Areas.Admin.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
         //[Authorize]
-        public async Task<IActionResult> Create([Bind("PlayerCardId, PositionId,PlayerFirstName,PlayerLastName,PlayerJersyNumber, PlayerImage,ISActive,ISSigned,Value,ConferenceId,DivisionId,SeasonId,NhlTeamId,ImageId,CardManufactureId,PlayerAddDate,TeamImageId,NationalityId")] Player players)
+        public async Task<IActionResult> Create([Bind("PlayerCardId, PositionId,PlayerFirstName,PlayerLastName,PlayerJersyNumber, PlayerImage,ISActive,ISSigned,Value,ConferenceId,DivisionId,SeasonId,NhlTeamId,ImageId,CardManufactureId,LeaugeId,PlayerAddDate,TeamImageId,NationalityId")] Player players)
         {
-           _root =  _hostEnvironment.WebRootPath;
+
             if (ModelState.IsValid)
             {
                 _context.Add(players);
                 //create filename
-                Guid guid = new Guid();
-                var fileName = string.Format("{0}_{1}_{2}", players.PlayerFirstName, players.PlayerLastName, guid) + _fileExtension;
-
-                string team = await _context.NhlTeam.Where(x => x.NhlTeamId == players.NhlTeamId).Select(x => x.NhlTeamName).FirstOrDefaultAsync();
+                var fileName = string.Format("{0}_{1}_{2}",players.PlayerCardId, players.PlayerFirstName, players.PlayerLastName) + _fileExtension;
+                string league = await _context.League.Where(x => x.LeagueId == players.LeagueId).Select(x => x.LeagueName).FirstOrDefaultAsync();
+                string team = await _context.Team.Where(x => x.TeamId == players.TeamId).Select(x => x.TeamName).FirstOrDefaultAsync();
                 string year = await _context.Season.Where(x => x.SeasonId == players.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
                 string position = await _context.Position.Where(x => x.PositionId == players.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
-                string imgPath = string.Format("/images/nhl/{0}/{1}/{2}/{3}_{4}", team, year, position, players.PlayerFirstName,players.PlayerLastName);
-                var uploads = _root + "/" + imgPath;
-                Directory.CreateDirectory(uploads);
-
                 _context.SaveChanges();
-                NewImage(players, fileName, imgPath);
-               
-                //players.PlayerId = await _context.Image.Select(x => x.PlayerId).LastOrDefaultAsync();
+
+                //To method to ad Image
+                NewImage(players, fileName, team, year, position, league);
                 players.ImageId = await _context.Image.Select(x => x.ImageId).LastOrDefaultAsync();
                 await _context.SaveChangesAsync();
                 return View();
@@ -155,18 +153,54 @@ namespace Hockey.Areas.Admin.Controllers
             return View(players);
         }
 
-        public Image NewImage(Player player, string fileName, string imgPath)
+        public Image NewImage(Player players, string fileName,string leauge, string team, string year, string position)
         {
+            _root = _hostEnvironment.WebRootPath;
+            string imgPath = string.Format("images/{0}/{1}/{2}/{3}/{4}_{5}",leauge, team, year, position, players.PlayerFirstName, players.PlayerLastName);
+            var uploads = _root + "/" + imgPath;
+            Directory.CreateDirectory(uploads);
             var img = new Image
             {
                 ImageName = fileName,
                 ImagePath = imgPath,
-                PlayerId = player.PlayerId
+                PlayerId = players.PlayerId
             };
+            UploadImage(fileName, uploads);
             _context.Add(img);
             _context.SaveChanges();
             return img;
         }
+
+        public void UploadImage(string fileName, string uploads)
+        {
+            // TODO: Fix a Image Bulder to create an Imager .png/.jpg or other format from Base64StringFormat
+            if (string.IsNullOrEmpty(_imageData))
+                throw new ArgumentNullException(nameof(_imageData), "No image data received");
+
+            _imageMatch = Regex.Match(_imageData, @"^data:(?<mimetype>[^;]+);base64,(?<data>.+)$");
+            if (!_imageMatch.Success)
+                throw new ArgumentException("imageData is in unknown format", nameof(_imageData));
+
+            _mimeType = _imageMatch.Groups["mimetype"].Value;
+            Match imageType = Regex.Match(_mimeType, @"^[^/]+/(?<type>.+?)$");
+            if (!imageType.Success)
+                throw new ArgumentException($"mimeType format invalid for {_mimeType}", nameof(_mimeType));
+
+            _fileExtension = imageType.Groups["type"].Value;
+            byte[] data = Convert.FromBase64String(_imageMatch.Groups["data"].Value);
+            var bytes = data;
+            using (var imageFile = new FileStream(_imageData, FileMode.Create))
+            {
+                imageFile.Write(bytes, 0, bytes.Length);
+                using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                {
+                    imageFile.CopyToAsync(fileStream);
+                }
+                imageFile.Flush();
+            }
+
+        }
+
 
         [HttpPost]
         public string ImageData(string imageData)
@@ -185,13 +219,6 @@ namespace Hockey.Areas.Admin.Controllers
 
             string fileExtension = imageType.Groups["type"].Value;
             byte[] data = Convert.FromBase64String(imageMatch.Groups["data"].Value);
-            var bytes = data;
-            // TODO: Fix a Image Bulder to create an Imager .png/.jpg or other format from Base64StringFormat
-            // using (var imageFile = new FileStream(_imageData, FileMode.Create))
-            //{
-            //    imageFile.Write(bytes, 0, bytes.Length);
-            //    imageFile.Flush();
-            //}
 
             _imageData = imageData;
             _fileExtension = fileExtension;
@@ -223,10 +250,10 @@ namespace Hockey.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PlayerCardId, PositionId,PlayerFirstName,PlayerLastName,PlayerJersyNumber, PlayerImage,ISActive,ISSigned,Value,ConferenceId,DivisionId,SeasonId,NhlTeamId,ImageId,CardManufactureId,PlayerAddDate,TeamImageId,NationalityId")] Player players)
+        public async Task<IActionResult> Edit(int id, [Bind("PlayerCardId, PositionId,PlayerFirstName,PlayerLastName,PlayerJersyNumber, PlayerImage,ISActive,ISSigned,Value,ConferenceId,DivisionId,SeasonId,NhlTeamId,ImageId,LeaugeId,CardManufactureId,PlayerAddDate,TeamImageId,NationalityId")] Player players)
         {
             ViewData["Maker"] = new SelectList(_context.CardManufacture.OrderBy(x => x.MakerName), "Id", "MakerName");
-            ViewData["Team"] = new SelectList(_context.NhlTeam.OrderBy(x => x.NhlTeamName), "Id", "TeamName");
+            ViewData["Team"] = new SelectList(_context.Team.OrderBy(x => x.TeamName), "Id", "TeamName");
             ViewData["Division"] = new SelectList(_context.Division.OrderBy(x => x.DivisionName), "Id", "DivisionName");
             ViewData["Conference"] = new SelectList(_context.Conference.OrderBy(x => x.ConferenceName), "Id", "ConferenceName");
             ViewData["Position"] = new SelectList(_context.Position.OrderBy(x => x.PositionType), "Id", "Position");

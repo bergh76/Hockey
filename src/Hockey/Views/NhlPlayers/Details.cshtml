@@ -1,0 +1,72 @@
+@model Hockey.Models.NhlPlayer
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NhlPlayer</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ISActive)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ISActive)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ISSigned)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ISSigned)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NhlPlayerCardId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NhlPlayerCardId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerAddDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerAddDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerFirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerFirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerImage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerImage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerJersyNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerJersyNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerLastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerLastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Value)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Value)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.NhlPlayerId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

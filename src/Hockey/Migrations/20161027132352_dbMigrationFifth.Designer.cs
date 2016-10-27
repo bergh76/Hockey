@@ -8,9 +8,10 @@ using Hockey.Data;
 namespace Hockey.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161027132352_dbMigrationFifth")]
+    partial class dbMigrationFifth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -149,72 +150,20 @@ namespace Hockey.Migrations
                     b.ToTable("Nationality");
                 });
 
-            modelBuilder.Entity("Hockey.Models.NhlPlayer", b =>
+            modelBuilder.Entity("Hockey.Models.NhlTeam", b =>
                 {
-                    b.Property<int>("NhlPlayerId")
+                    b.Property<int>("NhlTeamId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CardManufactureId");
 
                     b.Property<int>("ConferenceId");
 
                     b.Property<int>("DivisionId");
 
-                    b.Property<bool>("ISActive");
+                    b.Property<string>("NhlTeamName");
 
-                    b.Property<bool>("ISSigned");
+                    b.HasKey("NhlTeamId");
 
-                    b.Property<int>("ImageId");
-
-                    b.Property<int>("LeagueId");
-
-                    b.Property<int>("NationalityId");
-
-                    b.Property<string>("NhlPlayerCardId");
-
-                    b.Property<DateTime>("PlayerAddDate");
-
-                    b.Property<string>("PlayerFirstName");
-
-                    b.Property<string>("PlayerImage");
-
-                    b.Property<int>("PlayerJersyNumber");
-
-                    b.Property<string>("PlayerLastName");
-
-                    b.Property<int>("PositionId");
-
-                    b.Property<int>("SeasonId");
-
-                    b.Property<int>("TeamId");
-
-                    b.Property<int>("TeamImageId");
-
-                    b.Property<decimal>("Value");
-
-                    b.HasKey("NhlPlayerId");
-
-                    b.HasIndex("CardManufactureId");
-
-                    b.HasIndex("ConferenceId");
-
-                    b.HasIndex("DivisionId");
-
-                    b.HasIndex("ImageId");
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("NationalityId");
-
-                    b.HasIndex("PositionId");
-
-                    b.HasIndex("SeasonId");
-
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("TeamImageId");
-
-                    b.ToTable("NhlPlayer");
+                    b.ToTable("NhlTeam");
                 });
 
             modelBuilder.Entity("Hockey.Models.Player", b =>
@@ -238,6 +187,8 @@ namespace Hockey.Migrations
 
                     b.Property<int>("NationalityId");
 
+                    b.Property<int>("NhlTeamId");
+
                     b.Property<DateTime>("PlayerAddDate");
 
                     b.Property<string>("PlayerCardId");
@@ -253,8 +204,6 @@ namespace Hockey.Migrations
                     b.Property<int>("PositionId");
 
                     b.Property<int>("SeasonId");
-
-                    b.Property<int>("TeamId");
 
                     b.Property<int>("TeamImageId");
 
@@ -274,11 +223,11 @@ namespace Hockey.Migrations
 
                     b.HasIndex("NationalityId");
 
+                    b.HasIndex("NhlTeamId");
+
                     b.HasIndex("PositionId");
 
                     b.HasIndex("SeasonId");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("TeamImageId");
 
@@ -311,82 +260,14 @@ namespace Hockey.Migrations
                     b.ToTable("Season");
                 });
 
-            modelBuilder.Entity("Hockey.Models.ShlPlayer", b =>
-                {
-                    b.Property<int>("ShlPlayerId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CardManufactureId");
-
-                    b.Property<bool>("ISActive");
-
-                    b.Property<bool>("ISSigned");
-
-                    b.Property<int>("ImageId");
-
-                    b.Property<int>("LeagueId");
-
-                    b.Property<int>("NationalityId");
-
-                    b.Property<DateTime>("PlayerAddDate");
-
-                    b.Property<string>("PlayerCardId");
-
-                    b.Property<string>("PlayerFirstName");
-
-                    b.Property<string>("PlayerImage");
-
-                    b.Property<int>("PlayerJersyNumber");
-
-                    b.Property<string>("PlayerLastName");
-
-                    b.Property<int>("PositionId");
-
-                    b.Property<int>("SeasonId");
-
-                    b.Property<int>("TeamId");
-
-                    b.Property<int>("TeamImageId");
-
-                    b.Property<decimal>("Value");
-
-                    b.HasKey("ShlPlayerId");
-
-                    b.HasIndex("CardManufactureId");
-
-                    b.HasIndex("ImageId");
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("NationalityId");
-
-                    b.HasIndex("PositionId");
-
-                    b.HasIndex("SeasonId");
-
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("TeamImageId");
-
-                    b.ToTable("ShlPlayer");
-                });
-
-            modelBuilder.Entity("Hockey.Models.Team", b =>
-                {
-                    b.Property<int>("TeamId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("TeamName");
-
-                    b.HasKey("TeamId");
-
-                    b.ToTable("Team");
-                });
-
             modelBuilder.Entity("Hockey.Models.TeamImage", b =>
                 {
                     b.Property<int>("TeamImageId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("LeagueId");
+
+                    b.Property<int>("NhlTeamId");
 
                     b.Property<string>("TeamImageName");
 
@@ -504,59 +385,6 @@ namespace Hockey.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Hockey.Models.NhlPlayer", b =>
-                {
-                    b.HasOne("Hockey.Models.CardManufacture", "_CardManufacture")
-                        .WithMany()
-                        .HasForeignKey("CardManufactureId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Conference", "_Conference")
-                        .WithMany()
-                        .HasForeignKey("ConferenceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Division", "_Division")
-                        .WithMany()
-                        .HasForeignKey("DivisionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Image", "_Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.League", "_Leauge")
-                        .WithMany()
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Nationality", "_Nationality")
-                        .WithMany()
-                        .HasForeignKey("NationalityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Position", "_Position")
-                        .WithMany()
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Season", "_Season")
-                        .WithMany()
-                        .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Team", "_Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.TeamImage", "_TeamImage")
-                        .WithMany()
-                        .HasForeignKey("TeamImageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Hockey.Models.Player", b =>
                 {
                     b.HasOne("Hockey.Models.CardManufacture", "_CardManufacture")
@@ -584,6 +412,11 @@ namespace Hockey.Migrations
                         .HasForeignKey("NationalityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Hockey.Models.NhlTeam", "_Team")
+                        .WithMany()
+                        .HasForeignKey("NhlTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Hockey.Models.Position", "_Position")
                         .WithMany()
                         .HasForeignKey("PositionId")
@@ -592,11 +425,6 @@ namespace Hockey.Migrations
                     b.HasOne("Hockey.Models.Season", "_Season")
                         .WithMany()
                         .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Team", "_Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Hockey.Models.TeamImage", "_TeamImage")
@@ -607,49 +435,6 @@ namespace Hockey.Migrations
                     b.HasOne("Hockey.Models.Image", "_Image")
                         .WithMany()
                         .HasForeignKey("_ImageImageId");
-                });
-
-            modelBuilder.Entity("Hockey.Models.ShlPlayer", b =>
-                {
-                    b.HasOne("Hockey.Models.CardManufacture", "_CardManufacture")
-                        .WithMany()
-                        .HasForeignKey("CardManufactureId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Image", "_Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.League", "_Leauge")
-                        .WithMany()
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Nationality", "_Nationality")
-                        .WithMany()
-                        .HasForeignKey("NationalityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Position", "_Position")
-                        .WithMany()
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Season", "_Season")
-                        .WithMany()
-                        .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Team", "_Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.TeamImage", "_TeamImage")
-                        .WithMany()
-                        .HasForeignKey("TeamImageId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

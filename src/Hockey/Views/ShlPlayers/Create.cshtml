@@ -1,0 +1,141 @@
+@model Hockey.Models.ShlPlayer
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>ShlPlayer</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="CardManufactureId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="CardManufactureId" class ="form-control" asp-items="ViewBag.CardManufactureId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="ISActive" />
+                    <label asp-for="ISActive"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="ISSigned" />
+                    <label asp-for="ISSigned"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ImageId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="ImageId" class ="form-control" asp-items="ViewBag.ImageId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="LeagueId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="LeagueId" class ="form-control" asp-items="ViewBag.LeagueId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="NationalityId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="NationalityId" class ="form-control" asp-items="ViewBag.NationalityId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerAddDate" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerAddDate" class="form-control" />
+                <span asp-validation-for="PlayerAddDate" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerCardId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerCardId" class="form-control" />
+                <span asp-validation-for="PlayerCardId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerFirstName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerFirstName" class="form-control" />
+                <span asp-validation-for="PlayerFirstName" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerImage" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerImage" class="form-control" />
+                <span asp-validation-for="PlayerImage" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerJersyNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerJersyNumber" class="form-control" />
+                <span asp-validation-for="PlayerJersyNumber" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlayerLastName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PlayerLastName" class="form-control" />
+                <span asp-validation-for="PlayerLastName" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PositionId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="PositionId" class ="form-control" asp-items="ViewBag.PositionId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SeasonId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="SeasonId" class ="form-control" asp-items="ViewBag.SeasonId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TeamId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="TeamId" class ="form-control" asp-items="ViewBag.TeamId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TeamImageId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="TeamImageId" class ="form-control" asp-items="ViewBag.TeamImageId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Value" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

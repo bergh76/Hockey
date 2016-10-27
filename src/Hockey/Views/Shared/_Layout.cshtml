@@ -38,8 +38,16 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="Area" asp-controller="Players" asp-action="Index">Players</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            Dropdown <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="Area" asp-controller="NhlPlayers" asp-action="Index"><img class="logo" src="~/images/Logos/00_Nhl_shield_sm.png" />Nhl</a></li>
+                            <li><a asp-area="Area" asp-controller="ShlPlayers" asp-action="Index"><img class="logo" src="" />Shl</a></li>
+                        </ul>
+                    </li>
+                    <li><a asp-area="Area" asp-controller="Admin" asp-action="Index">Admin</a></li>                    
                 </ul>
                 @*@await Html.PartialAsync("_LoginPartial")*@
             </div>

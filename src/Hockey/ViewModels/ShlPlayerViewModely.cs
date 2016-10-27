@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hockey.ViewModels
 {
-    public class PlayerViewModel
+    public class ShlPlayerViewModel
     {
         public int PlayerId { get; set; }
         public string CardNumber { get; set; }
@@ -16,8 +16,6 @@ namespace Hockey.ViewModels
         public int SeasonId { get; set; }
         public string Position { get; set; }
         public int JersyNumber { get; set; }
-        public  string Conference { get; set; }
-        public string Division { get; set; }
         public string TeamImgPath { get; set; }
         public string Team { get; set; }
         public string ImagePath { get; set; }

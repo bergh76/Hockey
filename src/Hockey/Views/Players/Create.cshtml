@@ -1,4 +1,4 @@
-﻿@model Hockey.Models.Player
+﻿@model Hockey.Models.NhlPlayer
 
 @{
     ViewData["Title"] = "Create";
@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row">
             <span class="img-logo-container"><img class="img img-responsive" src="~/images/Logos/00_Nhl_shield_sm.png" /></span><h2>NHL - Players</h2>
-            <p class="lead">- Add Playercard data and add image -</p>
+            <p class="lead">- Add NHL-Player -</p>
         </div>
     </div>
 </section>
@@ -112,10 +112,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="NhlTeamId" class="col-md-5 control-label">Team</label>
+                        <label asp-for="TeamId" class="col-md-5 control-label">Team</label>
                         <div class="col-md-7">
-                            <select asp-for="NhlTeamId" class="form-control placeholder" asp-items="ViewBag.NhlTeam"></select>
-                            <span asp-validation-for="NhlTeamId" class="text-danger"></span>
+                            <select asp-for="TeamId" class="form-control placeholder" asp-items="ViewBag.Team"></select>
+                            <span asp-validation-for="TeamId" class="text-danger"></span>
                         </div>
                     </div>
 
