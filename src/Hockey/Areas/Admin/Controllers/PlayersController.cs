@@ -113,7 +113,7 @@ namespace Hockey.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 ViewData["CardManufacture"] = new SelectList(_context.CardManufacture.OrderBy(x => x.MakerName), "CardManufactureId", "MakerName");
-                ViewData["League"] = new SelectList(_context.League.OrderBy(x => x.LeagueName), "LeagueId", "LeaugeName");
+                ViewData["League"] = new SelectList(_context.League.OrderBy(x => x.LeagueName), "LeagueId", "LeagueName");
                 ViewData["Team"] = new SelectList(_context.Team.OrderBy(x => x.TeamName), "TeamId", "TeamName");
                 ViewData["Division"] = new SelectList(_context.Division.OrderBy(x => x.DivisionName), "DivisionId", "DivisionName");
                 ViewData["Conference"] = new SelectList(_context.Conference.OrderBy(x => x.ConferenceName), "ConferenceId", "ConferenceName");

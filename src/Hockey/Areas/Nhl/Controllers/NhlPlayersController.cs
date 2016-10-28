@@ -7,16 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hockey.Data;
 using Hockey.Models;
+using Microsoft.AspNetCore.Hosting;
+using System.Text.RegularExpressions;
+using System.IO;
+using Hockey.HelperClasses;
 
 namespace Hockey.Areas.Nhl.Controllers
 {
     public class NhlPlayersController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public NhlPlayersController(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostEnvironment; // service that provides some useful environment information such as the current file path
+        //private IFormFile _file;
+        private static string _root;
+        public static System.Drawing.Image _imageFile;
+        public NhlPlayersController(ApplicationDbContext context, IHostingEnvironment hostEnvironment)
         {
-            _context = context;    
+            _context = context;
+            _hostEnvironment = hostEnvironment;
+            //_file = file;
+
         }
 
         // GET: NhlPlayers
@@ -56,16 +66,13 @@ namespace Hockey.Areas.Nhl.Controllers
         // GET: NhlPlayers/Create
         public IActionResult Create()
         {
-            ViewData["CardManufactureId"] = new SelectList(_context.CardManufacture, "CardManufactureId", "CardManufactureId");
-            ViewData["ConferenceId"] = new SelectList(_context.Conference, "ConferenceId", "ConferenceId");
-            ViewData["DivisionId"] = new SelectList(_context.Division, "DivisionId", "DivisionId");
-            ViewData["ImageId"] = new SelectList(_context.Image, "ImageId", "ImageId");
-            ViewData["LeagueId"] = new SelectList(_context.League, "LeagueId", "LeagueId");
-            ViewData["NationalityId"] = new SelectList(_context.Nationality, "NationalityId", "NationalityId");
-            ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionId");
-            ViewData["SeasonId"] = new SelectList(_context.Season, "SeasonId", "SeasonId");
-            ViewData["TeamId"] = new SelectList(_context.Team, "TeamId", "TeamId");
-            ViewData["TeamImageId"] = new SelectList(_context.TeamImage, "TeamImageId", "TeamImageId");
+            ViewData["CardManufactureId"] = new SelectList(_context.CardManufacture, "CardManufactureId", "MakerName");
+            ViewData["ConferenceId"] = new SelectList(_context.Conference, "ConferenceId", "ConferenceName");
+            ViewData["DivisionId"] = new SelectList(_context.Division, "DivisionId", "DivisionName");
+            ViewData["NationalityId"] = new SelectList(_context.Nationality, "NationalityId", "NationalityName");
+            ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionType");
+            ViewData["SeasonId"] = new SelectList(_context.Season, "SeasonId", "SeasonName");
+            ViewData["TeamId"] = new SelectList(_context.Team.Where(x => x.LeagueId == 1).ToList(), "TeamId", "TeamName");
             return View();
         }
 
@@ -79,20 +86,60 @@ namespace Hockey.Areas.Nhl.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(nhlPlayer);
+                string ext = ImageFromDOMHelper._fileExtension;
+                var fileName = string.Format("{0}_{1}_{2}.", nhlPlayer.NhlPlayerCardId, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName) + ext;
+                ImageCreator.fileName = fileName;
+                string league = await _context.League.Where(x => x.LeagueId == 1).Select(x => x.LeagueName).FirstOrDefaultAsync();
+                string team = await _context.Team.Where(x => x.TeamId == nhlPlayer.TeamId).Select(x => x.TeamName).FirstOrDefaultAsync();
+                string year = await _context.Season.Where(x => x.SeasonId == nhlPlayer.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
+                string position = await _context.Position.Where(x => x.PositionId == nhlPlayer.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
+                NewImage(nhlPlayer, fileName, team, year, position, league);
+                await _context.SaveChangesAsync();
+                //To method to ad Image
+
+                nhlPlayer.PlayerAddDate = DateTime.Now;
+                nhlPlayer.ImageId = await _context.Image.Select(x => x.ImageId).LastOrDefaultAsync();
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["CardManufactureId"] = new SelectList(_context.CardManufacture, "CardManufactureId", "CardManufactureId", nhlPlayer.CardManufactureId);
-            ViewData["ConferenceId"] = new SelectList(_context.Conference, "ConferenceId", "ConferenceId", nhlPlayer.ConferenceId);
-            ViewData["DivisionId"] = new SelectList(_context.Division, "DivisionId", "DivisionId", nhlPlayer.DivisionId);
-            ViewData["ImageId"] = new SelectList(_context.Image, "ImageId", "ImageId", nhlPlayer.ImageId);
-            ViewData["LeagueId"] = new SelectList(_context.League, "LeagueId", "LeagueId", nhlPlayer.LeagueId);
-            ViewData["NationalityId"] = new SelectList(_context.Nationality, "NationalityId", "NationalityId", nhlPlayer.NationalityId);
-            ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionId", nhlPlayer.PositionId);
-            ViewData["SeasonId"] = new SelectList(_context.Season, "SeasonId", "SeasonId", nhlPlayer.SeasonId);
-            ViewData["TeamId"] = new SelectList(_context.Team, "TeamId", "TeamId", nhlPlayer.TeamId);
-            ViewData["TeamImageId"] = new SelectList(_context.TeamImage, "TeamImageId", "TeamImageId", nhlPlayer.TeamImageId);
+            //ViewData["CardManufactureId"] = new SelectList(_context.CardManufacture, "CardManufactureId", "CardManufactureId", nhlPlayer.CardManufactureId);
+            //ViewData["ConferenceId"] = new SelectList(_context.Conference, "ConferenceId", "ConferenceId", nhlPlayer.ConferenceId);
+            //ViewData["DivisionId"] = new SelectList(_context.Division, "DivisionId", "DivisionId", nhlPlayer.DivisionId);
+            //ViewData["NationalityId"] = new SelectList(_context.Nationality, "NationalityId", "NationalityId", nhlPlayer.NationalityId);
+            //ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionId", nhlPlayer.PositionId);
+            //ViewData["SeasonId"] = new SelectList(_context.Season, "SeasonId", "SeasonId", nhlPlayer.SeasonId);
+            //ViewData["TeamId"] = new SelectList(_context.Team, "TeamId", "TeamId", nhlPlayer.TeamId);
             return View(nhlPlayer);
+        }
+
+        public Image NewImage(NhlPlayer nhlPlayer, string fileName, string leauge, string team, string year, string position)
+        {
+            _root = _hostEnvironment.WebRootPath;
+            string imgPath = string.Format("images/{0}/{1}/{2}/{3}/{4}_{5}", leauge, team, year, position, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName);
+            var uploads = _root + "/" + imgPath;
+            ImageCreator.uploads = uploads;
+            Directory.CreateDirectory(uploads);
+            var img = new Image
+            {
+                ImageName = fileName,
+                ImagePath = imgPath,
+                PlayerId = nhlPlayer.NhlPlayerId
+            };
+            var createImage = new ImageCreator();
+            createImage.ImageCreate();
+            _context.Add(img);
+            _context.SaveChanges();
+            return img;
+        }
+
+
+        [HttpPost]
+        public string ImageData(string imageData)
+        {
+            var data = new ImageFromDOMHelper();
+            data.ImageData(imageData);
+            return imageData;
         }
 
         // GET: NhlPlayers/Edit/5
@@ -111,13 +158,11 @@ namespace Hockey.Areas.Nhl.Controllers
             ViewData["CardManufactureId"] = new SelectList(_context.CardManufacture, "CardManufactureId", "CardManufactureId", nhlPlayer.CardManufactureId);
             ViewData["ConferenceId"] = new SelectList(_context.Conference, "ConferenceId", "ConferenceId", nhlPlayer.ConferenceId);
             ViewData["DivisionId"] = new SelectList(_context.Division, "DivisionId", "DivisionId", nhlPlayer.DivisionId);
-            ViewData["ImageId"] = new SelectList(_context.Image, "ImageId", "ImageId", nhlPlayer.ImageId);
             ViewData["LeagueId"] = new SelectList(_context.League, "LeagueId", "LeagueId", nhlPlayer.LeagueId);
             ViewData["NationalityId"] = new SelectList(_context.Nationality, "NationalityId", "NationalityId", nhlPlayer.NationalityId);
             ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionId", nhlPlayer.PositionId);
             ViewData["SeasonId"] = new SelectList(_context.Season, "SeasonId", "SeasonId", nhlPlayer.SeasonId);
             ViewData["TeamId"] = new SelectList(_context.Team, "TeamId", "TeamId", nhlPlayer.TeamId);
-            ViewData["TeamImageId"] = new SelectList(_context.TeamImage, "TeamImageId", "TeamImageId", nhlPlayer.TeamImageId);
             return View(nhlPlayer);
         }
 
@@ -157,7 +202,6 @@ namespace Hockey.Areas.Nhl.Controllers
             ViewData["ConferenceId"] = new SelectList(_context.Conference, "ConferenceId", "ConferenceId", nhlPlayer.ConferenceId);
             ViewData["DivisionId"] = new SelectList(_context.Division, "DivisionId", "DivisionId", nhlPlayer.DivisionId);
             ViewData["ImageId"] = new SelectList(_context.Image, "ImageId", "ImageId", nhlPlayer.ImageId);
-            ViewData["LeagueId"] = new SelectList(_context.League, "LeagueId", "LeagueId", nhlPlayer.LeagueId);
             ViewData["NationalityId"] = new SelectList(_context.Nationality, "NationalityId", "NationalityId", nhlPlayer.NationalityId);
             ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionId", nhlPlayer.PositionId);
             ViewData["SeasonId"] = new SelectList(_context.Season, "SeasonId", "SeasonId", nhlPlayer.SeasonId);

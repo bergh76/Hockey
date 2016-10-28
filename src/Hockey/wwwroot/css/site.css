@@ -43,10 +43,23 @@ textarea {
     content: "]";
     padding-left: 0.5em;
 }
-
-.logo{
+.logo-plain{
+    height: 33.33%;
+}
+.logo-SHL{
     height: 30px;
-    margin-right: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.logo-NHL{
+    height: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.margin-left-10{
+    margin-left: 10px;
 }
 /* Make .svg files in the carousel display properly in older browsers */
 .carousel-inner .item img[src$=".svg"]
@@ -72,6 +85,8 @@ textarea {
 /** Cropper **/
 .cropper .img-container,
 .cropper .img-preview {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC');
+
   background-color: rgba(255, 255, 255, 0.1);
   width: 100%;
   text-align: left;
