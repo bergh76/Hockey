@@ -92,7 +92,7 @@ namespace Hockey.Areas.Nhl.Controllers
                 string position = await _context.Position.Where(x => x.PositionId == nhlPlayer.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
                 nhlPlayer.PlayerAddDate = DateTime.Now;
                 await _context.SaveChangesAsync();
-                NewImage(nhlPlayer, fileName, league, team, year, position);
+                await NewImage(nhlPlayer, fileName, league, team, year, position);
 
                 //To method to ad Image
 
@@ -111,7 +111,7 @@ namespace Hockey.Areas.Nhl.Controllers
             return View(nhlPlayer);
         }
 
-        public Image NewImage(NhlPlayer nhlPlayer, string fileName, string leauge, string team, string year, string position)
+        public async Task<IActionResult> NewImage(NhlPlayer nhlPlayer, string fileName, string leauge, string team, string year, string position)
         {
             _root = _hostEnvironment.WebRootPath;
             string imgPath = string.Format("images/{0}/{1}/{2}/{3}/{4}_{5}", leauge, team, year, position, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName);
@@ -124,12 +124,12 @@ namespace Hockey.Areas.Nhl.Controllers
                 ImagePath = imgPath,
                 PlayerId = nhlPlayer.NhlPlayerId
             };
+
+            _context.Add(img);
+            await _context.SaveChangesAsync();
             var createImage = new ImageCreator();
             createImage.ImageCreate();
-            _context.Add(img);
-            _context.SaveChanges();
-            _context.Update(nhlPlayer);
-            return img;
+            return View("Index");
         }
 
 

@@ -20,17 +20,26 @@ namespace Hockey.HelperClasses
         }
         public void ImageCreate()
         {
+            var path = _uploads + "/" + _fileName;
             System.Drawing.Image image;
             using (MemoryStream ms = new MemoryStream(_data))
             {
                 image = System.Drawing.Image.FromStream(ms);
-                image.Save(_fileName, System.Drawing.Imaging.ImageFormat.Png);
+                if (File.Exists(path) || File.Exists(Path.Combine(Directory.GetParent(Path.GetDirectoryName(path)).FullName, Path.GetFileName(path))) == true)
+                {
+                    int countFInDir = Directory.GetFiles(_uploads, "*", SearchOption.TopDirectoryOnly).Length; // count existing files in topdirectory ie. uploads
+                    int addCount = countFInDir + 1; // increment filecount 
+                    string ext = ImageFromDOMHelper._fileExtension;
+                    string noExt = _fileName.Replace("." + ext, "");
+                    string tmpNameThree = string.Format("{0}_{1}.{2}", noExt, addCount, ext);
+                    string newFnameExists = tmpNameThree.Replace(" ", "_");
+                    path = _uploads + "/" + newFnameExists;
+                    //TODO: FileConveter from JPG to PNG if inputfile is JPG
+                    image.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                }
+                else { image.Save(path, System.Drawing.Imaging.ImageFormat.Png); }
             }
-            //    using (var fileStream = new FileStream(Path.Combine(_uploads, _fileName), FileMode.Create)
-            //    {
-            //        image. .CopyToAsync(fileStream);
-            //}
-            //imageFile.Flush();
+            image.Dispose();
         }
     }
 }
