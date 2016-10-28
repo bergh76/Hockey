@@ -34,7 +34,7 @@ namespace Hockey.HelperClasses
                     string tmpNameThree = string.Format("{0}_{1}.{2}", noExt, addCount, ext);
                     string newFnameExists = tmpNameThree.Replace(" ", "_");
                     path = _uploads + "/" + newFnameExists;
-                    //TODO: FileConveter from JPG to PNG if inputfile is JPG
+                    //TODO: FileConveter not needed. File is saved to .png format no matter what
                     image.Save(path, System.Drawing.Imaging.ImageFormat.Png);
                 }
                 else { image.Save(path, System.Drawing.Imaging.ImageFormat.Png); }
