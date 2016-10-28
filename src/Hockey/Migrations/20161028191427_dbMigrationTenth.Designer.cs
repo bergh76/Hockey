@@ -8,9 +8,10 @@ using Hockey.Data;
 namespace Hockey.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161028191427_dbMigrationTenth")]
+    partial class dbMigrationTenth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -182,6 +183,8 @@ namespace Hockey.Migrations
 
                     b.Property<int>("TeamId");
 
+                    b.Property<int>("TeamImageId");
+
                     b.Property<decimal>("Value");
 
                     b.HasKey("NhlPlayerId");
@@ -199,6 +202,8 @@ namespace Hockey.Migrations
                     b.HasIndex("SeasonId");
 
                     b.HasIndex("TeamId");
+
+                    b.HasIndex("TeamImageId");
 
                     b.ToTable("NhlPlayer");
                 });
@@ -527,6 +532,11 @@ namespace Hockey.Migrations
                     b.HasOne("Hockey.Models.Team", "_Team")
                         .WithMany()
                         .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Hockey.Models.TeamImage", "_TeamImage")
+                        .WithMany()
+                        .HasForeignKey("TeamImageId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

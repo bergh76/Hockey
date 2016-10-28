@@ -19,17 +19,18 @@ namespace Hockey.HelperClasses
 
         }
         public void ImageCreate()
-        {            
-            var bytes = _data;
-            using (var imageFile = new FileStream(_imageData, FileMode.Create))
+        {
+            System.Drawing.Image image;
+            using (MemoryStream ms = new MemoryStream(_data))
             {
-                imageFile.Write(bytes, 0, bytes.Length);
-                using (var fileStream = new FileStream(Path.Combine(_uploads, _fileName), FileMode.Create))
-                {
-                    imageFile.CopyToAsync(fileStream);
-                }
-                imageFile.Flush();
+                image = System.Drawing.Image.FromStream(ms);
+                image.Save(_fileName, System.Drawing.Imaging.ImageFormat.Png);
             }
+            //    using (var fileStream = new FileStream(Path.Combine(_uploads, _fileName), FileMode.Create)
+            //    {
+            //        image. .CopyToAsync(fileStream);
+            //}
+            //imageFile.Flush();
         }
     }
 }

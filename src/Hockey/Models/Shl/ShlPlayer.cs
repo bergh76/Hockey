@@ -33,5 +33,6 @@ namespace Hockey.Models
         public int TeamImageId { get; set; }
         public Nationality _Nationality { get; set; }
         public int NationalityId { get; set; }
+
     }
 }

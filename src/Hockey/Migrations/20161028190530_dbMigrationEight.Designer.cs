@@ -8,9 +8,10 @@ using Hockey.Data;
 namespace Hockey.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161028190530_dbMigrationEight")]
+    partial class dbMigrationEight
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -164,6 +165,8 @@ namespace Hockey.Migrations
 
                     b.Property<bool>("ISSigned");
 
+                    b.Property<int>("LeagueId");
+
                     b.Property<int>("NationalityId");
 
                     b.Property<string>("NhlPlayerCardId");
@@ -171,6 +174,8 @@ namespace Hockey.Migrations
                     b.Property<DateTime>("PlayerAddDate");
 
                     b.Property<string>("PlayerFirstName");
+
+                    b.Property<string>("PlayerImage");
 
                     b.Property<int>("PlayerJersyNumber");
 
@@ -182,6 +187,8 @@ namespace Hockey.Migrations
 
                     b.Property<int>("TeamId");
 
+                    b.Property<int>("TeamImageId");
+
                     b.Property<decimal>("Value");
 
                     b.HasKey("NhlPlayerId");
@@ -192,6 +199,8 @@ namespace Hockey.Migrations
 
                     b.HasIndex("DivisionId");
 
+                    b.HasIndex("LeagueId");
+
                     b.HasIndex("NationalityId");
 
                     b.HasIndex("PositionId");
@@ -199,6 +208,8 @@ namespace Hockey.Migrations
                     b.HasIndex("SeasonId");
 
                     b.HasIndex("TeamId");
+
+                    b.HasIndex("TeamImageId");
 
                     b.ToTable("NhlPlayer");
                 });
@@ -509,6 +520,11 @@ namespace Hockey.Migrations
                         .HasForeignKey("DivisionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Hockey.Models.League", "_Leauge")
+                        .WithMany()
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Hockey.Models.Nationality", "_Nationality")
                         .WithMany()
                         .HasForeignKey("NationalityId")
@@ -527,6 +543,11 @@ namespace Hockey.Migrations
                     b.HasOne("Hockey.Models.Team", "_Team")
                         .WithMany()
                         .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Hockey.Models.TeamImage", "_TeamImage")
+                        .WithMany()
+                        .HasForeignKey("TeamImageId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

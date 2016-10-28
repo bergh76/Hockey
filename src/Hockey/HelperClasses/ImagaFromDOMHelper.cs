@@ -32,6 +32,8 @@ namespace Hockey.HelperClasses
             string fileExtension = imageType.Groups["type"].Value;
             byte[] data = Convert.FromBase64String(imageMatch.Groups["data"].Value);
 
+
+
             _data = data;
             _imageData = imageData;
             _fileExtension = fileExtension;
