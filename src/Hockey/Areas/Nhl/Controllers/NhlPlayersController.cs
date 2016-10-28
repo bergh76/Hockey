@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Text.RegularExpressions;
 using System.IO;
 using Hockey.HelperClasses;
+using Hockey.ViewModels;
 
 namespace Hockey.Areas.Nhl.Controllers
 {
@@ -31,15 +32,58 @@ namespace Hockey.Areas.Nhl.Controllers
         // GET: NhlPlayers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.NhlPlayer
-                .Include(n => n._CardManufacture)
-                .Include(n => n._Conference)
-                .Include(n => n._Division)
-                .Include(n => n._Nationality)
-                .Include(n => n._Position)
-                .Include(n => n._Season)
-                .Include(n => n._Team);
-            return View(await applicationDbContext.ToListAsync());
+            try
+            {
+                var playerList = from p in _context.NhlPlayer
+                                 join c in _context.Conference on p.ConferenceId equals c.ConferenceId
+                                 join d in _context.Division on p.DivisionId equals d.DivisionId
+                                 join t in _context.Team on p.TeamId equals t.TeamId
+                                 join y in _context.Position on p.PositionId equals y.PositionId
+                                 join i in _context.Image on p.NhlPlayerId equals i.PlayerId
+                                 join n in _context.Nationality on p.NationalityId equals n.NationalityId
+                                 //join ti in _context.TeamImage on p. equals ti.TeamImageId
+                                 join s in _context.Season on p.SeasonId equals s.SeasonId
+                                 join m in _context.CardManufacture on p.CardManufactureId equals m.CardManufactureId
+                                 //join l in _context.League on p.LeagueId equals l.LeagueId
+                                 select new NhlPlayerViewModel
+                                 {
+                                     CardNumber = p.NhlPlayerCardId,
+                                     NationalityImgPath = n.NationalityImageName + n.NationalityImagePath,
+                                     Nationality = n.NationalityName,
+                                     FirstName = p.PlayerFirstName,
+                                     LastName = p.PlayerLastName,
+                                     Position = y.PositionType,
+                                     JersyNumber = p.PlayerJersyNumber,
+                                     //League = l.LeagueName,
+                                     Conference = c.ConferenceName,
+                                     Division = d.DivisionName,
+                                     //TeamImgPath = ti.TeamImageName + ti.TeamImagePath,
+                                     Team = t.TeamName,
+                                     CardManufacture = m.MakerName,
+                                     Season = s.SeasonName,
+                                     ImagePath = i.ImagePath + i.ImageName,
+                                     ISSigned = p.ISSigned,
+                                     PlayerId = p.NhlPlayerId
+                                 };
+                IEnumerable<NhlPlayerViewModel> pwModel = await playerList.ToListAsync();
+                return View(pwModel);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException(ex.Message);
+            }
+            //return View();
+
+            //var applicationDbContext = _context.NhlPlayer
+            //    .Include(n => n._CardManufacture)
+            //    .Include(n => n._Conference)
+            //    .Include(n => n._Division)
+            //    .Include(n => n._Nationality)
+            //    .Include(n => n._Position)
+            //    .Include(n => n._Season)
+            //    .Include(n => n._Team);
+
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: NhlPlayers/Details/5
@@ -86,10 +130,12 @@ namespace Hockey.Areas.Nhl.Controllers
                 string tempFileName = string.Format("{0}_{1}_{2}.", nhlPlayer.NhlPlayerCardId, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName) + ext;
                 var fileName = tempFileName.Replace(" ", "_");
                 ImageCreator._fileName = fileName;
-                string league = await _context.League.Where(x => x.LeagueId == 1).Select(x => x.LeagueName).FirstOrDefaultAsync();
+                string league = await _context.League.Where(x => x.LeagueId == 1).Select(x => x.LeagueName).FirstOrDefaultAsync();                
                 string team = await _context.Team.Where(x => x.TeamId == nhlPlayer.TeamId).Select(x => x.TeamName).FirstOrDefaultAsync();
-                string year = await _context.Season.Where(x => x.SeasonId == nhlPlayer.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
-                string position = await _context.Position.Where(x => x.PositionId == nhlPlayer.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
+                string tmpYear = await _context.Season.Where(x => x.SeasonId == nhlPlayer.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
+                string year = tmpYear.Replace(" - ", "_")
+;                string tmpPosition = await _context.Position.Where(x => x.PositionId == nhlPlayer.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
+                string position = tmpPosition.Replace(" - ", "_");
                 nhlPlayer.PlayerAddDate = DateTime.Now;
                 await _context.SaveChangesAsync();
                 await NewImage(nhlPlayer, fileName, league, team, year, position);
@@ -114,7 +160,8 @@ namespace Hockey.Areas.Nhl.Controllers
         public async Task<IActionResult> NewImage(NhlPlayer nhlPlayer, string fileName, string leauge, string team, string year, string position)
         {
             _root = _hostEnvironment.WebRootPath;
-            string imgPath = string.Format("images/{0}/{1}/{2}/{3}/{4}_{5}", leauge, team, year, position, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName);
+            string imgPath = string.Format("images/{0}/{1}/{2}/{3}/{4}_{5}/", leauge, team, year, position, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName);
+            imgPath.Replace(" ", "_");
             var uploads = _root + "/" + imgPath;
             ImageCreator._uploads = uploads;
             Directory.CreateDirectory(uploads);
