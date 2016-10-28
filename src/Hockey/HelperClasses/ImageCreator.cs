@@ -10,8 +10,8 @@ namespace Hockey.HelperClasses
     {
         public static byte[] _data;
         public static string _imageData;
-        public static string uploads;
-        public static string fileName;
+        public static string _uploads;
+        public static string _fileName;
         public ImageCreator()
         {
             _data = ImageFromDOMHelper._data;
@@ -19,13 +19,12 @@ namespace Hockey.HelperClasses
 
         }
         public void ImageCreate()
-        {
-            
+        {            
             var bytes = _data;
             using (var imageFile = new FileStream(_imageData, FileMode.Create))
             {
                 imageFile.Write(bytes, 0, bytes.Length);
-                using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                using (var fileStream = new FileStream(Path.Combine(_uploads, _fileName), FileMode.Create))
                 {
                     imageFile.CopyToAsync(fileStream);
                 }

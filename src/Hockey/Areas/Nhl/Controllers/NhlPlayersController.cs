@@ -88,7 +88,7 @@ namespace Hockey.Areas.Nhl.Controllers
                 _context.Add(nhlPlayer);
                 string ext = ImageFromDOMHelper._fileExtension;
                 var fileName = string.Format("{0}_{1}_{2}.", nhlPlayer.NhlPlayerCardId, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName) + ext;
-                ImageCreator.fileName = fileName;
+                ImageCreator._fileName = fileName;
                 string league = await _context.League.Where(x => x.LeagueId == 1).Select(x => x.LeagueName).FirstOrDefaultAsync();
                 string team = await _context.Team.Where(x => x.TeamId == nhlPlayer.TeamId).Select(x => x.TeamName).FirstOrDefaultAsync();
                 string year = await _context.Season.Where(x => x.SeasonId == nhlPlayer.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
@@ -118,7 +118,7 @@ namespace Hockey.Areas.Nhl.Controllers
             _root = _hostEnvironment.WebRootPath;
             string imgPath = string.Format("images/{0}/{1}/{2}/{3}/{4}_{5}", leauge, team, year, position, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName);
             var uploads = _root + "/" + imgPath;
-            ImageCreator.uploads = uploads;
+            ImageCreator._uploads = uploads;
             Directory.CreateDirectory(uploads);
             var img = new Image
             {
