@@ -5,5 +5,7 @@
         public int TeamImageId { get; set; }
         public string TeamImageName { get; set; }
         public string TeamImagePath { get; set; }
+        public int LeagueId { get; set; }
+        public int TeamId { get; set; }
     }
 }

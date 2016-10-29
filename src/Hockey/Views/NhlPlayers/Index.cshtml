@@ -4,81 +4,6 @@
     ViewData["Title"] = "Index";
 }
 
-@*<h2>Index</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Html.DisplayNameFor(model => model.ISActive)
-            </th>
-            <th>
-                Html.DisplayNameFor(model => model.ISSigned)
-            </th>
-            <th>
-                Html.DisplayNameFor(model => model.NhlPlayerCardId)
-            </th>
-            <th>
-                Html.DisplayNameFor(model => model.PlayerAddDate)
-            </th>
-            <th>
-                Html.DisplayNameFor(model => model.PlayerFirstName)
-            </th>
-
-            <th>
-                Html.DisplayNameFor(model => model.PlayerJersyNumber)
-            </th>
-            <th>
-                Html.DisplayNameFor(model => model.PlayerLastName)
-            </th>
-            <th>
-                Html.DisplayNameFor(model => model.Value)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-foreach (var item in Model) {
-        <tr>
-            <td>
-                Html.DisplayFor(modelItem => item.ISActive)
-            </td>
-            <td>
-                Html.DisplayFor(modelItem => item.ISSigned)
-            </td>
-            <td>
-                Html.DisplayFor(modelItem => item.NhlPlayerCardId)
-            </td>
-            <td>
-                Html.DisplayFor(modelItem => item.PlayerAddDate)
-            </td>
-            <td>
-                Html.DisplayFor(modelItem => item.PlayerFirstName)
-            </td>
-
-            <td>
-                Html.DisplayFor(modelItem => item.PlayerJersyNumber)
-            </td>
-            <td>
-                Html.DisplayFor(modelItem => item.PlayerLastName)
-            </td>
-            <td>
-                Html.DisplayFor(modelItem => item.Value)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.NhlPlayerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.NhlPlayerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.NhlPlayerId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@
-
-
 <h2>Index</h2>
 
 <p>
@@ -98,7 +23,7 @@ foreach (var item in Model) {
             <th>Divisions</th>
             <th>Nation <!--Flag + NationIsotext --></th>
             <th>Type</th>
-            <th>Signed</th>
+            @*<th>Signed</th>*@
             <th></th>
         </tr>
     </thead>
@@ -123,13 +48,13 @@ foreach (var item in Model) {
                 <td>@Html.DisplayFor(modelItem => item.JersyNumber)</td>
                 <td>@Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Position)</td>
-                <td>@Html.DisplayFor(modelItem => item.TeamImgPath)  @Html.DisplayFor(modelItem => item.Team)</td>
+                <td> <img class="img img-responsive team-logo-sm" src="@item.TeamImgPath" /></td>
                 <td>@Html.DisplayFor(modelItem => item.Season) @Html.HiddenFor(modelItem => item.SeasonId)</td>
                 <td>@Html.DisplayFor(modelItem => item.Conference)</td>
                 <td>@Html.DisplayFor(modelItem => item.Division)</td>
                 <td><img class="img img-responsive" src="@Html.DisplayFor(modelItem => item.NationalityImgPath)" />  @Html.DisplayFor(modelItem => item.Nationality)</td>
                 <td>@Html.DisplayFor(modelItem => item.CardManufacture)</td>
-                <td>@Html.DisplayFor(modelItem => item.ISSigned)</td>
+                @*<td>@Html.DisplayFor(modelItem => item.ISSigned)</td>*@
 
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.PlayerId">Edit</a> |

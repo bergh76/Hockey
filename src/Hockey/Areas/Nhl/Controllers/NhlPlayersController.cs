@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Hockey.Data;
 using Hockey.Models;
 using Microsoft.AspNetCore.Hosting;
-using System.Text.RegularExpressions;
 using System.IO;
 using Hockey.HelperClasses;
 using Hockey.ViewModels;
@@ -25,12 +24,16 @@ namespace Hockey.Areas.Nhl.Controllers
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
-            //_file = file;
-
         }
 
         // GET: NhlPlayers
         public async Task<IActionResult> Index()
+        {
+            var list = await ListPlayer();           
+            return View();
+        }
+
+        public async Task<ViewResult> ListPlayer()
         {
             try
             {
@@ -41,7 +44,7 @@ namespace Hockey.Areas.Nhl.Controllers
                                  join y in _context.Position on p.PositionId equals y.PositionId
                                  join i in _context.Image on p.NhlPlayerId equals i.PlayerId
                                  join n in _context.Nationality on p.NationalityId equals n.NationalityId
-                                 //join ti in _context.TeamImage on p. equals ti.TeamImageId
+                                 join ti in _context.TeamImage on t.TeamImageId equals ti.TeamImageId
                                  join s in _context.Season on p.SeasonId equals s.SeasonId
                                  join m in _context.CardManufacture on p.CardManufactureId equals m.CardManufactureId
                                  //join l in _context.League on p.LeagueId equals l.LeagueId
@@ -57,35 +60,23 @@ namespace Hockey.Areas.Nhl.Controllers
                                      //League = l.LeagueName,
                                      Conference = c.ConferenceName,
                                      Division = d.DivisionName,
-                                     //TeamImgPath = ti.TeamImageName + ti.TeamImagePath,
-                                     Team = t.TeamName,
+                                     TeamImgPath = ti.TeamImageName + ti.TeamImagePath,                                     Team = t.TeamName,
                                      CardManufacture = m.MakerName,
                                      Season = s.SeasonName,
                                      ImagePath = i.ImagePath + i.ImageName,
-                                     ISSigned = p.ISSigned,
+                                     //ISSigned = p.ISSigned,
                                      PlayerId = p.NhlPlayerId
                                  };
                 IEnumerable<NhlPlayerViewModel> pwModel = await playerList.ToListAsync();
-                return View(pwModel);
+                return View("Index", playerList);
             }
             catch (Exception ex)
             {
                 throw new ArgumentNullException(ex.Message);
             }
-            //return View();
-
-            //var applicationDbContext = _context.NhlPlayer
-            //    .Include(n => n._CardManufacture)
-            //    .Include(n => n._Conference)
-            //    .Include(n => n._Division)
-            //    .Include(n => n._Nationality)
-            //    .Include(n => n._Position)
-            //    .Include(n => n._Season)
-            //    .Include(n => n._Team);
-
-            //return View(await applicationDbContext.ToListAsync());
-        }
-
+        } 
+        
+        
         // GET: NhlPlayers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -126,7 +117,7 @@ namespace Hockey.Areas.Nhl.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(nhlPlayer);
-                string ext = ImageFromDOMHelper._fileExtension;
+                string ext = ImageCreator._fileExtension;
                 string tempFileName = string.Format("{0}_{1}_{2}.", nhlPlayer.NhlPlayerCardId, nhlPlayer.PlayerFirstName, nhlPlayer.PlayerLastName) + ext;
                 var fileName = tempFileName.Replace(" ", "_");
                 ImageCreator._fileName = fileName;
@@ -139,11 +130,6 @@ namespace Hockey.Areas.Nhl.Controllers
                 nhlPlayer.PlayerAddDate = DateTime.Now;
                 await _context.SaveChangesAsync();
                 await NewImage(nhlPlayer, fileName, league, team, year, position);
-
-                //To method to ad Image
-
-
-
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -173,7 +159,7 @@ namespace Hockey.Areas.Nhl.Controllers
             };
 
             _context.Add(img);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             var createImage = new ImageCreator();
             createImage.ImageCreate();
             return View("Index");
@@ -183,7 +169,7 @@ namespace Hockey.Areas.Nhl.Controllers
         [HttpPost]
         public string ImageData(string imageData)
         {
-            var data = new ImageFromDOMHelper();
+            var data = new ImageCreator();
             data.ImageData(imageData);
             return imageData;
         }

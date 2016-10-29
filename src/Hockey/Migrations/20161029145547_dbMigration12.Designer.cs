@@ -8,9 +8,10 @@ using Hockey.Data;
 namespace Hockey.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161029145547_dbMigration12")]
+    partial class dbMigration12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -377,10 +378,6 @@ namespace Hockey.Migrations
                 {
                     b.Property<int>("TeamImageId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("LeagueId");
-
-                    b.Property<int>("TeamId");
 
                     b.Property<string>("TeamImageName");
 

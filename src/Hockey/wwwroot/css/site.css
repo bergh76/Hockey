@@ -43,6 +43,9 @@ textarea {
     content: "]";
     padding-left: 0.5em;
 }
+.team-logo-sm{
+    width: 60%;
+}
 .logo-plain{
     height: 33.33%;
 }
