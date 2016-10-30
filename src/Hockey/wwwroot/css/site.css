@@ -31,7 +31,19 @@ textarea {
     font-size: 20px;
     line-height: 1.4;
 }
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"]
+{
+    width: 100%;
+}
 
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+  /* Hide captions */
+  .carousel-caption {
+    display: none
+  }
+}
 /* buttons and links extension to use brackets: [ click me ] */
 .btn-bracketed::before {
     display:inline-block;
@@ -45,6 +57,14 @@ textarea {
 }
 .team-logo-sm{
     width: 60%;
+}
+.team-logo-xs{
+    position: absolute;
+    padding: 6px 0 4px 2px;
+    width: 18%;
+}
+.player-name{
+    float:left;
 }
 .logo-plain{
     height: 33.33%;
@@ -64,18 +84,79 @@ textarea {
 .margin-left-10{
     margin-left: 10px;
 }
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"]
-{
-    width: 100%;
+
+/* Cardebox design*/
+
+.price-center-align1 {
+    margin-top: 0;
+    margin-bottom: 40px;
+    padding-top: 40px;
+    overflow: visible!important;
+}
+.price-center-align {
+    justify-content: center;
+    -webkit-justify-content: center;
+    display: flex;
+    display: -webkit-flex;
+}
+.sports-subscribe-sec.high {
+    background: #fff;
+    border: 1px solid #e1e1e1;
+}
+.sports-subscribe-sec {
+    background: #fff;
+    padding: 0;
+    margin:  0 0 18px 0;
+    height: 432px;
+    border: 1px solid #e1e1e1;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    -webkit-box-shadow: -5px 23px 16px -16px rgba(166,166,166,0.59);
+    -moz-box-shadow: -5px 23px 16px -16px rgba(166,166,166,0.59);
+    box-shadow: -5px 23px 16px -16px rgba(166,166,166,0.59);
+}
+.sports-subscribe-sec h5 .PriceToolTip {
+    padding: 0 0 7px;
+    margin: 0 0 0 -109px;
+    position: absolute;
+    left: 50%;
+    bottom: 33px;
+    z-index: 99999;
+    text-align: left;
+    display: none;
+}
+.sports-subscribe-sec .subInfo {
+    /*padding: 15px;*/
+    margin: 0;
+    text-align: center;
 }
 
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-  /* Hide captions */
-  .carousel-caption {
-    display: none
-  }
+.sports-subscribe-sec h5 {
+    padding: 0;
+    margin: 0;
+    height: 42px;
+    line-height: 42px;
+    /*background: #dcdcdc;*/
+    text-align: center;
+    /*text-transform: uppercase;*/
+    border-radius: 2px 2px 0 0;
+    /*font-size: 18px;*/
+    color: #000;
+    font-weight: 700;
+    position: relative;
+}
+.subNow {
+    border-top: 1px dotted #e1e1e1;
+    margin: 0 auto;
+
+}
+.img-wrapper{
+    /*display: block;*/
+    /*background-color: beige;*/
+    margin-left: auto;
+    margin-right:auto;
+    padding: 4px;
+    height: 342px;
 }
 
 .img-logo-container{

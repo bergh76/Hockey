@@ -2,6 +2,7 @@
 /// <reference path="jcrop/jquery.form.js" />
 /// <reference path="jcrop/jquery.Jcrop.js" />
 /// <reference path="jcrop/site.avatar.js" />
+/// <reference path="js/imagecropper.js" />
 /// <reference path="js/site.js" />
 /// <reference path="lib/bootstrap/dist/js/bootstrap.js" />
 /// <reference path="lib/cropper/dist/cropper.js" />
