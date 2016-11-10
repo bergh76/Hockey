@@ -13,12 +13,13 @@ namespace Hockey.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1")
+                .HasAnnotation("ProductVersion", "1.1.0-preview1-22509")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Hockey.Models.ApplicationUser", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
 
@@ -26,7 +27,7 @@ namespace Hockey.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Email")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
@@ -35,10 +36,10 @@ namespace Hockey.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
 
@@ -51,7 +52,7 @@ namespace Hockey.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -69,8 +70,6 @@ namespace Hockey.Migrations
                 {
                     b.Property<int>("CardManufactureId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("MakerDate");
 
                     b.Property<string>("MakerName");
 
@@ -164,6 +163,10 @@ namespace Hockey.Migrations
 
                     b.Property<bool>("ISSigned");
 
+                    b.Property<int>("ImageId");
+
+                    b.Property<int>("LeagueId");
+
                     b.Property<int>("NationalityId");
 
                     b.Property<string>("NhlPlayerCardId");
@@ -182,6 +185,8 @@ namespace Hockey.Migrations
 
                     b.Property<int>("TeamId");
 
+                    b.Property<int>("TeamImageId");
+
                     b.Property<decimal>("Value");
 
                     b.HasKey("NhlPlayerId");
@@ -197,8 +202,6 @@ namespace Hockey.Migrations
                     b.HasIndex("PositionId");
 
                     b.HasIndex("SeasonId");
-
-                    b.HasIndex("TeamId");
 
                     b.ToTable("NhlPlayer");
                 });
@@ -219,6 +222,8 @@ namespace Hockey.Migrations
                     b.Property<bool>("ISSigned");
 
                     b.Property<int>("ImageId");
+
+                    b.Property<int?>("ImageId1");
 
                     b.Property<int>("LeagueId");
 
@@ -246,8 +251,6 @@ namespace Hockey.Migrations
 
                     b.Property<decimal>("Value");
 
-                    b.Property<int?>("_ImageImageId");
-
                     b.HasKey("PlayerId");
 
                     b.HasIndex("CardManufactureId");
@@ -255,6 +258,8 @@ namespace Hockey.Migrations
                     b.HasIndex("ConferenceId");
 
                     b.HasIndex("DivisionId");
+
+                    b.HasIndex("ImageId1");
 
                     b.HasIndex("LeagueId");
 
@@ -268,8 +273,6 @@ namespace Hockey.Migrations
 
                     b.HasIndex("TeamImageId");
 
-                    b.HasIndex("_ImageImageId");
-
                     b.ToTable("Player");
                 });
 
@@ -278,7 +281,9 @@ namespace Hockey.Migrations
                     b.Property<int>("PositionId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("PositionType");
+                    b.Property<string>("PositionName");
+
+                    b.Property<string>("PositionShortName");
 
                     b.HasKey("PositionId");
 
@@ -393,20 +398,22 @@ namespace Hockey.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
+                        .IsUnique()
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
@@ -478,8 +485,6 @@ namespace Hockey.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("AspNetUserRoles");
                 });
 
@@ -529,11 +534,6 @@ namespace Hockey.Migrations
                         .WithMany()
                         .HasForeignKey("SeasonId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Team", "_Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Hockey.Models.Player", b =>
@@ -552,6 +552,10 @@ namespace Hockey.Migrations
                         .WithMany()
                         .HasForeignKey("DivisionId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Hockey.Models.Image", "_Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId1");
 
                     b.HasOne("Hockey.Models.League", "_Leauge")
                         .WithMany()
@@ -582,10 +586,6 @@ namespace Hockey.Migrations
                         .WithMany()
                         .HasForeignKey("TeamImageId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hockey.Models.Image", "_Image")
-                        .WithMany()
-                        .HasForeignKey("_ImageImageId");
                 });
 
             modelBuilder.Entity("Hockey.Models.ShlPlayer", b =>

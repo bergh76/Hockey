@@ -1,4 +1,4 @@
-@model IEnumerable<Hockey.ViewModels.NhlPlayerViewModel>
+﻿@model IEnumerable<Hockey.ViewModels.NhlPlayerViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,96 +9,52 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-@*<table class="table">
-    <thead>
-        <tr>
-            <th><!--CardImage--></th>
-            <th>CardId</th>
-            <th># <!--Jersey--></th>
-            <th>Name <!--Firsname + Lastname --></th>
-            <th>Position</th>
-            <th>Team <!--Team + TeamImage --></th>
-            <th>Season <!--SeasonStart + SeasonEnd --></th>
-            <th>Conferences</th>
-            <th>Divisions</th>
-            <th>Nation <!--Flag + NationIsotext --></th>
-            <th>Type</th>
-            @*<th>Signed</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>*@
 
 <div class="price-center-align1" style="display:block;">
     <div class="price-center-align center-block">
         <div class="col-md-12">
-            @foreach (var item in Model)
+            @if (Model.Count() != 0)
             {
-                <div class="col-md-3 col-md-6 col-md-12">
-                    <div class="sports-subscribe-sec high">
-                        <div>
-                            <img class="img img-responsive team-logo-xs pull-left" alt="@item.Team" src="@item.TeamImgPath" /><h5>@Html.DisplayFor(modelItem => item.Season) @Html.HiddenFor(modelItem => item.SeasonId) </h5>
-
-                        </div>
-                        <div class="subInfo">
-                            <div class="txt-3 cc_wrap web_price">
-                                @if (item.ImagePath != null)
-                                {
-                                    <div>
-                                        <a asp-action="Details" asp-route-id="@item.PlayerId"><img class="img img-responsive img-wrapper" alt="@item.FirstName @item.LastName" src="~/@item.ImagePath" ) /></a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div>
-                                        <img class="img img-responsive" src="~/images/MissingProductImage.jpg" />
-                                    </div>
-                                }
+                @foreach (var item in Model)
+                { 
+                    <label asp-for="@item.PlayerId" hidden></label>
+                    <div class="col-md-3 col-md-8 col-md-12">
+                        <div class="sports-subscribe-sec high">
+                            <div>
+                                <img class="img img-responsive team-logo-xs pull-left" alt="@item.Team" src="~/@item.TeamImgPath" /><h5>@Html.DisplayFor(modelItem => item.Season)</h5>
+                            </div>
+                            <div class="subInfo">
+                                <div class="txt-3 cc_wrap web_price">
+                                    @if (item.ImagePath != null)
+                                    {
+                                        <div>
+                                            <a asp-action="Details" asp-route-id="@item.PlayerId"><img class="img img-responsive img-wrapper" alt="@item.FirstName @item.LastName" src="~/@item.ImagePath" ) /></a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            <img class="img img-responsive" src="~/images/MissingProductImage.jpg" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="subNow">
+                                <h5># @Html.DisplayFor(modelItem => item.JersyNumber) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</h5>
+                            </div>
+                            <div>
+                                <a asp-action="Edit" asp-route-id="@item.PlayerId">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.PlayerId">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.PlayerId">Delete</a>
                             </div>
                         </div>
-                        <div class="subNow">
-                            <h5># @Html.DisplayFor(modelItem => item.JersyNumber) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</h5>
-                        </div>
                     </div>
-                </div>
+                }
+            }
+            else
+            {
+                <div class="jumbotron alert-danger"><h3>Listan är tom</h3></div>
             }
         </div>
     </div>
 </div>
-
-
-
-            @*<tr>
-                    <td>
-                        @if (item.ImagePath != null)
-                        {
-                            <img class="img img-responsive" src="~/@item.ImagePath") />
-                        }
-                        else
-                        {
-                            <img class="img img-responsive" src="~/images/MissingProductImage.jpg" />
-                        }
-                    </td>
-
-                    <td>@Html.DisplayFor(modelItem => item.CardNumber) @Html.HiddenFor(itemModel => item.PlayerId)</td>
-
-                    <td>@Html.DisplayFor(modelItem => item.JersyNumber)</td>
-                    <td>@Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Position)</td>
-                    <td> <img class="img img-responsive team-logo-sm" src="@item.TeamImgPath" /></td>
-                    <td>@Html.DisplayFor(modelItem => item.Season) @Html.HiddenFor(modelItem => item.SeasonId)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Conference)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Division)</td>
-                    <td><img class="img img-responsive" src="@Html.DisplayFor(modelItem => item.NationalityImgPath)" />  @Html.DisplayFor(modelItem => item.Nationality)</td>
-                    <td>@Html.DisplayFor(modelItem => item.CardManufacture)</td>
-                    @*<td>@Html.DisplayFor(modelItem => item.ISSigned)</td>
-
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.PlayerId">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.PlayerId">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.PlayerId">Delete</a>
-                    </td>
-                </tr>*@
-
-@*</tbody>
-    </table>*@

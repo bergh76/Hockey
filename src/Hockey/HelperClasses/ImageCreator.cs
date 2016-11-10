@@ -50,6 +50,7 @@ namespace Hockey.HelperClasses
 
             return imageData;
         }
+
         public void ImageCreate()
         {
             string ext = _fileExtension;

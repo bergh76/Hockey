@@ -55,7 +55,7 @@ namespace Hockey.Areas.Admin.Controllers
                                  join ti in _context.TeamImage on p.TeamImageId equals ti.TeamImageId
                                  join s in _context.Season on p.SeasonId equals s.SeasonId
                                  join m in _context.CardManufacture on p.CardManufactureId equals m.CardManufactureId
-                                 join l in _context.League on p.LeagueId equals l.LeagueId
+                                 //join l in _context.League on p.LeagueId equals l.LeagueId
                                  select new NhlPlayerViewModel
                                  {
                                      CardNumber = p.PlayerCardId,
@@ -63,9 +63,9 @@ namespace Hockey.Areas.Admin.Controllers
                                      Nationality = n.NationalityName,
                                      FirstName = p.PlayerFirstName,
                                      LastName = p.PlayerLastName,
-                                     Position = y.PositionType,
+                                     Position = y.PositionShortName,
                                      JersyNumber = p.PlayerJersyNumber,
-                                     League = l.LeagueName,
+                                     //League = l.LeagueName,
                                      Conference = c.ConferenceName,
                                      Division = d.DivisionName,
                                      TeamImgPath = ti.TeamImageName + ti.TeamImagePath,
@@ -141,7 +141,7 @@ namespace Hockey.Areas.Admin.Controllers
                 string league = await _context.League.Where(x => x.LeagueId == players.LeagueId).Select(x => x.LeagueName).FirstOrDefaultAsync();
                 string team = await _context.Team.Where(x => x.TeamId == players.TeamId).Select(x => x.TeamName).FirstOrDefaultAsync();
                 string year = await _context.Season.Where(x => x.SeasonId == players.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
-                string position = await _context.Position.Where(x => x.PositionId == players.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
+                string position = await _context.Position.Where(x => x.PositionId == players.PositionId).Select(x => x.PositionShortName).FirstOrDefaultAsync();
                 _context.SaveChanges();
 
                 //To method to ad Image
@@ -256,7 +256,7 @@ namespace Hockey.Areas.Admin.Controllers
             ViewData["Team"] = new SelectList(_context.Team.OrderBy(x => x.TeamName), "Id", "TeamName");
             ViewData["Division"] = new SelectList(_context.Division.OrderBy(x => x.DivisionName), "Id", "DivisionName");
             ViewData["Conference"] = new SelectList(_context.Conference.OrderBy(x => x.ConferenceName), "Id", "ConferenceName");
-            ViewData["Position"] = new SelectList(_context.Position.OrderBy(x => x.PositionType), "Id", "Position");
+            ViewData["Position"] = new SelectList(_context.Position.OrderBy(x => x.PositionShortName), "Id", "Position");
 
             if (id != players.PlayerId)
             {

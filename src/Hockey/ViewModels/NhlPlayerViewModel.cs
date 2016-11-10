@@ -13,10 +13,10 @@ namespace Hockey.ViewModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Season { get; set; }
-        public int SeasonId { get; set; }
+        //public int SeasonId { get; set; }
         public string Position { get; set; }
         public int JersyNumber { get; set; }
-        public string League { get; set; }
+        //public string League { get; set; }
         public  string Conference { get; set; }
         public string Division { get; set; }
         public string TeamImgPath { get; set; }

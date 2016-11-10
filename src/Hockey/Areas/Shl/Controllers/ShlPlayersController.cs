@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hockey.Data;
 using Hockey.Models;
-using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.AspNetCore.Hosting;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -70,7 +69,7 @@ namespace Hockey.Areas.Shl.Controllers
         {
             ViewData["CardManufactureId"] = new SelectList(_context.CardManufacture, "CardManufactureId", "MakerName");
             ViewData["NationalityId"] = new SelectList(_context.Nationality, "NationalityId", "NationalityName");
-            ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionType");
+            ViewData["PositionId"] = new SelectList(_context.Position, "PositionId", "PositionShortName");
             ViewData["SeasonId"] = new SelectList(_context.Season, "SeasonId", "SeasonName");
             ViewData["TeamId"] = new SelectList(_context.Team.Where(x => x.LeagueId == 2).ToList(),"TeamId","TeamName");//.Select(x => x.TeamName));
             return View();
@@ -90,7 +89,7 @@ namespace Hockey.Areas.Shl.Controllers
                 string league = await _context.League.Where(x => x.LeagueId == shlPlayer.LeagueId).Select(x => x.LeagueName).FirstOrDefaultAsync();
                 string team = await _context.Team.Where(x => x.TeamId == shlPlayer.TeamId).Select(x => x.TeamName).FirstOrDefaultAsync();
                 string year = await _context.Season.Where(x => x.SeasonId == shlPlayer.SeasonId).Select(x => x.SeasonName).FirstOrDefaultAsync();
-                string position = await _context.Position.Where(x => x.PositionId == shlPlayer.PositionId).Select(x => x.PositionType).FirstOrDefaultAsync();
+                string position = await _context.Position.Where(x => x.PositionId == shlPlayer.PositionId).Select(x => x.PositionShortName).FirstOrDefaultAsync();
                 _context.SaveChanges();
 
                 //To method to ad Image

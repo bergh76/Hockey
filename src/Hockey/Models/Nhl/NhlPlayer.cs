@@ -23,13 +23,16 @@ namespace Hockey.Models
         public int DivisionId { get; set; }
         public Season _Season { get; set; }
         public int SeasonId { get; set; }
-        public Team _Team { get; set; }
+        public int ImageId { get; set; }
         public int TeamId { get; set; }
+        public int TeamImageId { get; set; }
         public CardManufacture _CardManufacture { get; set; }
         public int CardManufactureId { get; set; }
         public DateTime PlayerAddDate { get; set; }
         public Nationality _Nationality { get; set; }
         public int NationalityId { get; set; }
+        public int LeagueId { get; set; }
 
+        ICollection<Image> Image { get; set; }
     }
 }

@@ -11,7 +11,9 @@ body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
-
+/*p > a{
+    text-decoration: none;
+}*/
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -36,7 +38,10 @@ textarea {
 {
     width: 100%;
 }
-
+a .modal-pointer{
+    text-decoration: none;
+    cursor: pointer;
+}
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
   /* Hide captions */
